@@ -298,4 +298,37 @@ The expanded coding capacity of *Streptacidiphilus* likely equips it with the ab
 
 Furthermore, the increased genetic content in *Streptacidiphilus* may include genes responsible for specialized functions, such as biosynthesis of secondary metabolites, antibiotic resistance, or symbiotic interactions with other organisms (Jarocki et al., 2019). These attributes are particularly valuable for survival in competitive ecosystems where resource availability can be unpredictable. In essence, the larger coding DNA in *Streptacidiphilus jiangxiensis* reflects an evolutionary strategy that enhances its adaptability and functional repertoire, illustrating how genomic complexity can influence ecological success and resilience (Huang et al., 2004).
 
+### 3) Calculate the length of all coding sequences in these two organisms. Make a boxplot of coding sequence length in these organisms. What is the mean and median coding sequence length of these two organisms? Describe any differences between the two organisms.
+
+Coding Sequence Length Distribution
+```{r}
+
+# Boxplot of coding sequence lengths
+
+boxplot(list(`Escherichia coli` = ecoli_length, 
+             `Streptacidiphilus jiangxiensis` = streptacidiphilus_length),
+        col = "yellow",
+        xlab = "Organism",
+        ylab = "Length (bp)",
+        main = "Coding Sequence Length Distribution")
+```
+
+
+Mean and Median Coding Sequence Length
+```{r}
+mean_median <- data.frame(
+  Organism = c("Escherichia coli", "Streptacidiphilus jiangxiensis"),
+  Mean_Length = c(mean(ecoli_length), mean(streptacidiphilus_length)),
+  Median_Length = c(median(ecoli_length), median(streptacidiphilus_length))
+)
+
+mean_median
+```
+
+##### Answer: 
+
+The comparison of coding sequence lengths between *Escherichia coli* and *Streptacidiphilus jiangxiensis* reveals significant insights into their genomic architectures and evolutionary adaptations. *Escherichia coli*, with a mean coding sequence length of 931.55 bp and a median of 804 bp, is known for its streamlined genome, which is optimized for rapid growth and efficient protein production in the nutrient-rich environments of mammalian intestines (Koonin, 2009). This bacterium's genetic simplicity has made it a model organism for studying fundamental biological processes, allowing researchers to explore genetic functions and interactions in a relatively uncomplicated context (Lizana and Schwartz, 2024).
+
+In contrast, *Streptacidiphilus jiangxiensis* presents a longer mean coding sequence of 973.73 bp and a median of 843 bp, suggesting a more intricate gene structure. This complexity may be indicative of specialized adaptations to its unique ecological niche, which includes survival in acidic environments (Malik et al., 2020). Longer coding sequences can allow for the encoding of more extensive and functionally diverse proteins, potentially enabling the bacterium to exploit a broader range of substrates or cope with environmental stresses (Maharjan and Ferenci, 2014). The differences in coding sequence length may reflect distinct evolutionary pressures faced by these organisms, with *Escherichia coli* evolving for rapid proliferation and *Streptacidiphilus jiangxiensis* potentially developing complex metabolic pathways or interactions to thrive in less hospitable conditions (Wan et al., 2022). This variation underscores the diverse functional requirements and ecological strategies that shape the genomes of bacteria, highlighting how environmental factors influence genetic structure and complexity (Chan et al., 2018).
+
 
