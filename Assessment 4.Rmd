@@ -9,6 +9,7 @@ output: html_document
 
 
 ## Introduction
+
 This report analyzes RNA-seq count data for gene expression and tree circumference measurements at two different sites over a 20-year period. 
 
 ## Task 1: RNA-seq count data for gene expression, high and low expression of 3 genes.
@@ -16,6 +17,7 @@ This report analyzes RNA-seq count data for gene expression and tree circumferen
 ### 1.1 Read in the file “gene_expression.tsv”, making the gene identifiers the row names. Show a table of values for the first six genes.
 
 1) Load libraries
+
 ```{r}
 #RNA-seq Count Data Analysis
 #Load necessary libraries
@@ -30,6 +32,7 @@ library(tidyr)
 ```
 
 2) Read in the gene expression data
+
 ```{r}
 #Download the data from the github link provided
 URL = "https://raw.githubusercontent.com/ghazkha/Assessment4/refs/heads/main/gene_expression.tsv"
@@ -40,6 +43,7 @@ gene_expression <- read.table("gene_expression.tsv", header = TRUE, sep = "\t", 
 ```
 
 3) 1st First 6 rows of the gene_expression data
+
 ```{r}
 # View the first few rows of the data
 head(n=6, gene_expression)
@@ -49,6 +53,7 @@ View( head (n=6, gene_expression))
 ### 1.2 Make a new column which is the mean of the other columns. Show a table of values for the first six genes.
 
 Calculate Mean Expression
+
 ```{r}
 # Calculate the mean across the samples and add as a new column
 gene_expression <- gene_expression %>%
@@ -60,6 +65,7 @@ head(n=6, gene_expression)
 ### 1.3 List the 10 genes with the highest mean expression.
 
 Identify Top 10 Genes
+
 ```{r}
 # List the 10 genes with the highest mean expression
 top_genes <- gene_expression %>%
@@ -72,6 +78,7 @@ print(top_genes)
 ### 1.4 Determine the number of genes with a mean <10.
 
 Count Genes with Low Expression (Mean < 10)
+
 ```{r}
 # Determine the number of genes with a mean < 10
 num_genes_below_10 <- sum(gene_expression$mean_expression < 10)
@@ -83,6 +90,7 @@ print(num_genes_below_10)
 ### 1.5 Make a histogram plot of the mean values and include it into your report.
 
 Histogram of <10, Mean Values
+
 ```{r}
 # Make a histogram plot of the mean values
 filtered_data <- gene_expression[gene_expression$mean_expression < 10, ]
@@ -100,7 +108,7 @@ ggsave("histogram_mean_low_gene_expression.png")
 
 ### 2.1 Import “growth_data.csv” file into an R object. What are the column names?
 
-Read Data to perfrorm a Tree Circumference Data Analysis
+Read Data to perform a Tree Circumference Data Analysis
 
 ```{r}
 # Read in the growth data
@@ -116,3 +124,92 @@ View(growth_data)
 # Show column names
 cat("The column names are:", colnames(growth_data))
 ```
+
+### 2.2 Calculate the mean and standard deviation of tree circumference at the start and end of the study at both sites.
+
+Statistics
+
+```{r}
+# Calculate mean and standard deviation for tree circumference
+summary_stats <- growth_data %>%
+  summarise(mean_start_2005_southwest = mean(Circumf_2005_cm[Site == "southwest"]),
+    sd_start_2005_southwest = sd(Circumf_2005_cm[Site == "southwest"]),
+    mean_start_2005_northeast = mean(Circumf_2005_cm[Site == "northeast"]),
+    sd_start_2005_northeast = sd(Circumf_2005_cm[Site == "northeast"]),
+    mean_end_2020_southwest = mean(Circumf_2020_cm[Site == "southwest"]),
+    sd_end_2020_southwest = sd(Circumf_2020_cm[Site == "southwest"]),
+    mean_end_2020_northeast = mean(Circumf_2020_cm[Site == "northeast"]),
+    sd_end_2020_northeast = sd(Circumf_2020_cm[Site == "northeast"])
+  )
+
+# Print summary statistics
+print(summary_stats)
+```
+
+### 2.3 Make a box plot of tree circumference at the start and end of the study at both sites.
+
+Boxplot of circumferences
+
+```{r}
+# Reshape data from wide to long format for Circumf_2005_cm and Circumf_2020_cm
+long_data <- growth_data %>%
+  select(Site, TreeID, Circumf_2005_cm, Circumf_2020_cm) %>%
+  pivot_longer(cols = starts_with("Circumf"), 
+               names_to = "Year", 
+               values_to = "Circumference")
+
+# Filter for only the start and end years
+long_data <- long_data %>%
+  filter(Year %in% c("Circumf_2005_cm", "Circumf_2020_cm"))
+
+# Create a box plot
+ggplot(long_data, aes(x = Year, y = Circumference, fill = Site)) +
+  geom_boxplot() +
+  labs(title = "Tree Circumference at Start (2005) and End (2020) of Study", 
+       x = "Year", 
+       y = "Circumference (cm)") +
+  scale_fill_manual(values = c("northeast" = "red", "southwest" = "pink")) +
+  theme_minimal()
+
+# Save the box plot to your report
+ggsave("boxplot_tree_circumference.png")
+```
+
+### 2.4 Calculate the mean growth over the last 10 years at each site.
+
+Mean Growth Calculation
+
+```{r}
+# Calculate growth over the last 10 years for each tree
+growth_data <- growth_data %>%
+  mutate(Growth_10_years = Circumf_2020_cm - Circumf_2010_cm)
+
+# Calculate mean growth at each site
+mean_growth <- growth_data %>%
+  group_by(Site) %>%
+  summarise(mean_growth = mean(Growth_10_years, na.rm = TRUE), .groups = 'drop')
+
+# Print the mean growth
+print(mean_growth)
+```
+
+### 2.5 Use the t.test to estimate the p-value that the 10 year growth is different at the two sites.
+
+T-Test for Growth Difference
+
+```{r}
+# Perform t-test to compare growth between sites
+t_test_result <- t.test(Growth_10_years ~ Site, data = growth_data)
+
+# Print t-test results
+print(t_test_result)
+```
+
+#### Interpretation:
+
+p-value: The p-value of 0.06229 suggests that the difference in mean growth between the two sites is not statistically significant at the conventional alpha level of 0.05. However, it is close to this threshold, indicating a potential trend toward significance.
+
+Mean Comparison: The mean growth in the northeast (42.94 cm) is higher than that in the southwest (35.49 cm). This suggests that trees in the northeast experienced greater growth compared to those in the southwest over the last 10 years.
+
+Confidence Interval: The confidence interval includes zero, which means we cannot conclusively say that there is a true difference in growth between the two sites. The upper limit (15.29 cm) indicates that, while the northeast shows higher growth, it is possible that the actual difference might be minimal or even negative.
+
