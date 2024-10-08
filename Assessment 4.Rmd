@@ -2,7 +2,9 @@
 title: "Assessment 4"
 author: "Nicole Hinojosa, Saqeena Thapa, Vanshika"
 date: "2024-10-03"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 # Part 1: Importing files, data wrangling, mathematical operations, plots and saving code on GitHub.
@@ -47,7 +49,7 @@ gene_expression <- read.table("gene_expression.tsv", header = TRUE, sep = "\t", 
 ```{r}
 # View the first few rows of the data
 head(n=6, gene_expression)
-View( head (n=6, gene_expression))
+head( head (n=6, gene_expression))
 ```
 
 ### 1.2 Make a new column which is the mean of the other columns. Show a table of values for the first six genes.
@@ -119,7 +121,7 @@ download.file(URL, destfile = "growth_data.csv")
 # Read the downloaded TSV file into R
 growth_data <- read.csv("growth_data.csv")
 
-View(growth_data)
+head(growth_data)
 
 # Show column names
 cat("The column names are:", colnames(growth_data))
