@@ -416,3 +416,55 @@ streptacidiphilus_length: A numeric vector containing the lengths of coding sequ
 
 total_lengths: A data frame summarizing the total coding DNA lengths for both organisms.
 
+### Coding Sequence Length Distribution
+
+The purpose of this code is to visualize the distribution of coding sequence lengths for *Escherichia coli* and *Streptacidiphilus jiangxiensis* using a boxplot.
+
+```r
+
+boxplot(list(`Escherichia coli` = ecoli_length, 
+             `Streptacidiphilus jiangxiensis` = streptacidiphilus_length),
+        col = "yellow",
+        xlab = "Organism",
+        ylab = "Length (bp)",
+        main = "Coding Sequence Length Distribution")
+```
+
+#### Inputs:
+ecoli_length: A numeric vector containing the lengths of coding sequences for *Escherichia coli*.
+
+streptacidiphilus_length: A numeric vector containing the lengths of coding sequences for *Streptacidiphilus jiangxiensis*.
+
+#### Outputs:
+A boxplot displaying the distribution of coding sequence lengths for both organisms, with labeled axes and a title.
+
+### Mean and Median Coding Sequence Length
+
+The purpose of this code is to calculate and summarize the mean and median coding sequence lengths for *Escherichia coli* and *Streptacidiphilus jiangxiensis*.
+
+```r
+mean_median <- data.frame(
+  Organism = c("Escherichia coli", "Streptacidiphilus jiangxiensis"),
+  Mean_Length = c(mean(ecoli_length), mean(streptacidiphilus_length)),
+  Median_Length = c(median(ecoli_length), median(streptacidiphilus_length))
+)
+
+mean_median
+```
+
+#### Inputs:
+ecoli_length: A numeric vector containing the lengths of coding sequences for *Escherichia coli*.
+
+streptacidiphilus_length: A numeric vector containing the lengths of coding sequences for *Streptacidiphilus jiangxiensis*.
+
+#### Outputs:
+A data frame named mean_median that includes:
+
+Organism: Names of the two organisms.
+
+Mean_Length: The mean coding sequence length for each organism.
+
+Median_Length: The median coding sequence length for each organism.
+
+
+
