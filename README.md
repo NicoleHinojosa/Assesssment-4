@@ -1,4 +1,5 @@
 # Assesssment 4: Bioinformatics final project.
+## Group 7: Nicole Hinojosa, Saqeena Thapa & Vanshika
 
 ## Introduction:
 
@@ -13,7 +14,7 @@ Throughout the code, we prioritized clarity by incorporating sufficient comments
 #### 1) R.utils
 
 ```r
-library(R.utils)
+library(R.utils) #use BiocManager::install("Biostrings") if it is not already installed in your Rstudio
 ```
 Purpose: Provides utility functions that enhance base R capabilities, including file handling, string manipulation, and data compression (Bengtsson, 2023). It helps streamline various operations within the R environment.
 
@@ -79,9 +80,11 @@ In this task, we aim to analyze gene expression data by reading a file containin
 The following code downloads a gene expression dataset from a specified GitHub repository and then reads that dataset into R as a data frame. This allows for further analysis and processing of the gene expression data in subsequent steps.
 
 ```r
+#Download the data from the github link provided
 URL = "https://raw.githubusercontent.com/ghazkha/Assessment4/refs/heads/main/gene_expression.tsv"
 download.file(URL, destfile = "gene_expression.tsv")
 
+# Read the downloaded TSV file into R
 gene_expression <- read.table("gene_expression.tsv", header = TRUE, sep = "\t", row.names = 1)
 ```
 
@@ -103,8 +106,8 @@ Data Frame: The code reads the downloaded TSV file into R and stores it in a var
 The purpose of this code is to display the first six rows of the gene_expression data frame. This allows users to quickly inspect the structure and content of the data, ensuring that it has been loaded correctly and giving an overview of the gene expression values.
 
 ```r
+# View the first few rows of the data
 head(n=6, gene_expression)
-View( head (n=6, gene_expression))
 ```
 
 #### Inputs:
@@ -122,9 +125,11 @@ Data Viewer Window: The second line View(head(n=6, gene_expression)) opens a sep
 This code calculates the mean expression level for each gene across all samples and add it as a new column to the gene_expression data frame.
 
 ```r
+# Calculate the mean across the samples and add as a new column
 gene_expression <- gene_expression %>%
   mutate(mean_expression = rowMeans(select(., everything())))
   
+# Show a table of values for the first six genes including the mean
 head(n=6, gene_expression)
 ```
 
@@ -143,12 +148,13 @@ Console Output: The output of head(n=6, gene_expression) displays the first six 
 The top 10 genes can be identified and list using the highest mean expression values from the gene_expression data frame, showed in the following code.
 
 ```r
-
+# List the 10 genes with the highest mean expression
 top_genes <- gene_expression %>%
   arrange(desc(mean_expression)) %>%
   head(10)
-
-print(top_genes)
+  
+# Print the top genes
+(top_genes)
 ```
 
 #### Inputs:
@@ -157,23 +163,27 @@ gene_expression: The data frame containing gene expression data, including the m
 #### Outputs:
 top_genes: A data frame containing the top 10 genes sorted by their mean expression values in descending order.
 
-Console Output: The print(top_genes) command displays the details of these top 10 genes in the console.
+Console Output: The (top_genes) command displays the details of these top 10 genes in the console.
 
 ### Count and Plot the Genes with Low Expression (Mean < 10)
 
 The purpose of this code is to identify and list the top 10 genes with the highest mean expression values from the gene_expression data frame.
 
 ```r
+# Determine the number of genes with a mean < 10
 num_genes_below_10 <- sum(gene_expression$mean_expression < 10)
 
+# Print the number of genes
 print(num_genes_below_10)
 
+# Make a histogram plot of the mean values
 filtered_data <- gene_expression[gene_expression$mean_expression < 10, ]
 ggplot(filtered_data, aes(x = mean_expression)) +
   geom_histogram( binwidth = 1, fill = "orange", color = "black") +
   labs(title = "Histogram of Mean Low Gene Expression", x = "Mean Expression", y = "Frequency") +
   theme_minimal()
 
+# Save the plot to your report
 ggsave("histogram_mean_low_gene_expression.png")
 ```
 
@@ -194,12 +204,17 @@ In this task, we aim to analyze tree circumference measurements collected from t
 The code below was used to import tree circumference growth data from a CSV file in a Github repository. It also displays the column names for further analysis.
 
 ```r
+# Read in the growth data
+#Download the data from the github link provided
 URL = "https://raw.githubusercontent.com/ghazkha/Assessment4/refs/heads/main/growth_data.csv"
 download.file(URL, destfile = "growth_data.csv")
 
+# Read the downloaded TSV file into R
 growth_data <- read.csv("growth_data.csv")
-View(growth_data)
 
+head(growth_data)
+
+# Show column names
 cat("The column names are:", colnames(growth_data))
 ```
 
@@ -218,7 +233,7 @@ View: The growth_data data frame is opened in a viewer for inspection.
 The purpose of this code is to calculate and summarize the mean and standard deviation of tree circumference measurements at two different sites (southwest and northeast) for the years 2005 and 2020.
 
 ```r
-
+# Calculate mean and standard deviation for tree circumference
 summary_stats <- growth_data %>%
   summarise(mean_start_2005_southwest = mean(Circumf_2005_cm[Site == "southwest"]),
     sd_start_2005_southwest = sd(Circumf_2005_cm[Site == "southwest"]),
@@ -230,6 +245,7 @@ summary_stats <- growth_data %>%
     sd_end_2020_northeast = sd(Circumf_2020_cm[Site == "northeast"])
   )
 
+# Print summary statistics
 print(summary_stats)
 ```
 
@@ -246,16 +262,18 @@ Console Output: The summary statistics are printed to the console for review.
 The purpose of this code is to create a box plot that visually compares the tree circumference measurements for the years 2005 and 2020 across two different sites.
 
 ```r
-
+# Reshape data from wide to long format for Circumf_2005_cm and Circumf_2020_cm
 long_data <- growth_data %>%
   select(Site, TreeID, Circumf_2005_cm, Circumf_2020_cm) %>%
   pivot_longer(cols = starts_with("Circumf"), 
                names_to = "Year", 
                values_to = "Circumference")
 
+# Filter for only the start and end years
 long_data <- long_data %>%
   filter(Year %in% c("Circumf_2005_cm", "Circumf_2020_cm"))
 
+# Create a box plot
 ggplot(long_data, aes(x = Year, y = Circumference, fill = Site)) +
   geom_boxplot() +
   labs(title = "Tree Circumference at Start (2005) and End (2020) of Study", 
@@ -264,6 +282,7 @@ ggplot(long_data, aes(x = Year, y = Circumference, fill = Site)) +
   scale_fill_manual(values = c("northeast" = "red", "southwest" = "pink")) +
   theme_minimal()
 
+# Save the box plot to your report
 ggsave("boxplot_tree_circumference.png")
 ```
 
@@ -282,13 +301,16 @@ Saved Plot: The box plot is saved as "boxplot_tree_circumference.png".
 The following code calculates the growth of the trees over the last 10 years for each site and to compute the mean growth for each site.
 
 ```r
+# Calculate growth over the last 10 years for each tree
 growth_data <- growth_data %>%
   mutate(Growth_10_years = Circumf_2020_cm - Circumf_2010_cm)
 
+# Calculate mean growth at each site
 mean_growth <- growth_data %>%
   group_by(Site) %>%
   summarise(mean_growth = mean(Growth_10_years, na.rm = TRUE), .groups = 'drop')
 
+# Print the mean growth
 print(mean_growth)
 ```
 
@@ -308,9 +330,10 @@ The purpose of this code is to perform a t-test to compare the growth of trees b
 The t-test is a statistical method used to determine if there is a significant difference between the means of two groups. In this case, used to determine if the difference in mean growth between the two sites (control and treatment) is statistically significant.
 
 ```r
-
+# Perform t-test to compare growth between sites
 t_test_result <- t.test(Growth_10_years ~ Site, data = growth_data)
 
+# Print t-test results
 print(t_test_result)
 ```
 
@@ -332,15 +355,20 @@ In this task, we aim to analyze and compare the sequence features of *Streptacid
 This code is used to download and read the coding DNA sequences for *Escherichia coli* and Streptacidiphilus jiangxiensis from specified URLs, decompress the files, and load the sequences into R for further analysis.
 
 ```r
+# URLs for the coding DNA sequences
 URL_Ecoli <- "https://ftp.ensemblgenomes.ebi.ac.uk/pub/bacteria/release-59/fasta/bacteria_117_collection/escherichia_coli_110957_gca_000485615/cds/Escherichia_coli_110957_gca_000485615.ASM48561v1.cds.all.fa.gz"
 URL_Streptacidiphilus <- "https://ftp.ensemblgenomes.ebi.ac.uk/pub/bacteria/release-59/fasta/bacteria_57_collection/streptacidiphilus_jiangxiensis_gca_900109465/cds/Streptacidiphilus_jiangxiensis_gca_900109465.IMG-taxon_2675903135_annotated_assembly.cds.all.fa.gz"
 
+# Downloading the sequences
 download.file(URL_Ecoli, destfile = "e_coli_cds.fa.gz")
 download.file(URL_Streptacidiphilus, destfile = "streptacidiphilus_cds.fa.gz")
+
+#Decompress the files
 
 gunzip("e_coli_cds.fa.gz")
 gunzip("streptacidiphilus_cds.fa.gz")
 
+# Reading the sequences
 ecoli_seqs <- seqinr::read.fasta ("e_coli_cds.fa")
 streptacidiphilus_seqs <- seqinr::read.fasta ("streptacidiphilus_cds.fa")
 ```
@@ -362,11 +390,11 @@ Decompressed files: e_coli_cds.fa and streptacidiphilus_cds.fa in the working di
 The purpose of this code is to count the number of coding sequences in the *Escherichia coli* and *Streptacidiphilus jiangxiensis* datasets and create a summary table of these counts.
 
 ```r
-
+# Count coding sequences
 ecoli_count <- length (ecoli_seqs)
 streptacidiphilus_count <- length (streptacidiphilus_seqs)
 
-
+# Creating a summary table
 coding_counts <- data.frame(
   Organism = c("Escherichia coli", "Streptacidiphilus jiangxiensis"),
   Coding_Sequences = c(ecoli_count, streptacidiphilus_count)
@@ -392,10 +420,11 @@ coding_counts: A data frame summarizing the counts of coding sequences for both 
 The code below calculates the total length of coding DNA sequences for *Escherichia coli* and *Streptacidiphilus jiangxiensis*, and to create a summary table displaying these lengths.
 
 ```r
-
+# Calculate total coding DNA length
 ecoli_length <- as.numeric(summary(ecoli_seqs)[,1])
 streptacidiphilus_length <- as.numeric(summary(streptacidiphilus_seqs)[,1])
 
+# Creating a summary table
 total_lengths <- data.frame(
   Organism = c("Escherichia coli", "Streptacidiphilus jiangxiensis"),
   Total_Length = c(sum(ecoli_length), sum(streptacidiphilus_length))
@@ -421,6 +450,7 @@ total_lengths: A data frame summarizing the total coding DNA lengths for both or
 The purpose of this code is to visualize the distribution of coding sequence lengths for *Escherichia coli* and *Streptacidiphilus jiangxiensis* using a boxplot.
 
 ```r
+# Boxplot of coding sequence lengths
 
 boxplot(list(`Escherichia coli` = ecoli_length, 
              `Streptacidiphilus jiangxiensis` = streptacidiphilus_length),
@@ -471,6 +501,8 @@ Median_Length: The median coding sequence length for each organism.
 The frecuency of DNA bases in the coding sequences of *Escherichia coli* and *Streptacidiphilus jiangxiensis*, is calculated and visualized using the following code.
 
 ```r
+# Calculate base frequencies
+
 dna_ecoli <- unlist(ecoli_seqs)
 ecoli_dna_df <- data.frame(base = dna_ecoli) 
 ecoli_dna_composition <- ecoli_dna_df %>% count(base)  
@@ -478,6 +510,8 @@ ecoli_dna_composition <- ecoli_dna_df %>% count(base)
 dna_streptacidiphilus <- unlist(streptacidiphilus_seqs)
 streptacidiphilus_dna_df <- data.frame(base = dna_streptacidiphilus)
 streptacidiphilus_dna_composition <- streptacidiphilus_dna_df %>% count(base)
+
+# Bar plots
 
 barplot(height=ecoli_dna_composition$n,
         names.arg=ecoli_dna_composition$base,
@@ -493,6 +527,7 @@ barplot(height=streptacidiphilus_dna_composition$n,
         ylab="frequency", 
         main="S. jiangxiensis CDS composition")
 grid()
+
 
 ```
 
@@ -513,14 +548,18 @@ Bar Plots: Visual representations of nucleotide frequencies for both organisms, 
 The purpose of this code is to convert coding DNA sequences into protein sequences and then calculate and visualize the frequency of amino acids in *Escherichia coli* and *Streptacidiphilus jiangxiensis*.
 
 ```r
+# Convert coding DNA to protein sequences
+
 ecoli_seqs <- seqinr::read.fasta ("e_coli_cds.fa")
 streptacidiphilus_seqs <- seqinr::read.fasta ("streptacidiphilus_cds.fa")
 
 ecoli_prot <- lapply(ecoli_seqs, translate)
 streptacidiphilus_prot <- lapply(streptacidiphilus_seqs, translate)
 
-ecoli_proteins <- unlist(ecoli_prot)
-streptacidiphilus_proteins <-unlist(streptacidiphilus_prot)
+
+# Calculate amino acid frequencies
+ecoli_proteins <- unlist (ecoli_prot)
+streptacidiphilus_proteins <-unlist (streptacidiphilus_prot)
 
 aa_ecoli <-unique(ecoli_proteins)
 aa_ecoli <- aa_ecoli[aa_ecoli != "*"]
@@ -536,6 +575,7 @@ ecoli_aa_freq <- ecoli_proteins_df %>%
 streptacidiphilus_aa_freq <- streptacidiphilus_proteins_df %>%
   count(aa)
 
+# Bar plots
 barplot(height=ecoli_aa_freq$n,
         names.arg = ecoli_aa_freq$aa,
         col = "lightgreen",
@@ -569,13 +609,18 @@ Bar Plots: Visual representations of amino acid frequencies for both organisms, 
 This code calculates and visualizes the codon usage bias in *Escherichia coli* and *Streptacidiphilus jiangxiensis* by creating relative synonymous codon usage (RSCU) tables and generating bar plots for comparison.
 
 ```r
-
+# Create codon usage tables
 RSCU_ecoli <- uco(dna_ecoli,index="rscu",as.data.frame=TRUE)
 RSCU_streptacidiphilus <- uco(dna_streptacidiphilus,index="rscu",as.data.frame=TRUE)
 
+# Create a combined table
 RSCU_combined <- cbind(RSCU_ecoli, "S. jiangxiensis RSCU"=RSCU_streptacidiphilus$RSCU)
 colnames(RSCU_combined)[5] <- "E. coli RSCU"
-View(RSCU_combined)
+head(RSCU_combined)
+
+# Bar plots
+
+# E. coli
 
 barplot(height=RSCU_ecoli$RSCU, 
         names.arg=RSCU_ecoli$codon,
@@ -588,6 +633,8 @@ barplot(height=RSCU_ecoli$RSCU,
         width = 0.4,
         ylim = c(0, 4))
 grid()
+
+# Streptacidiphilus jiangxiensis
  
 barplot(height=RSCU_streptacidiphilus$RSCU, 
         names.arg=RSCU_streptacidiphilus$codon,
@@ -621,6 +668,7 @@ Bar Plots: Visual representations of codon usage bias for both *Escherichia coli
 The purpose of this code is to create an overlaid bar plot to visually compare the relative synonymous codon usage (RSCU) between *Escherichia coli* and *Streptacidiphilus jiangxiensis*.
 
 ```r
+# Comparing two barplots
 
 bar_heights_ecoli <- barplot(height = RSCU_ecoli$RSCU, 
                               names.arg = RSCU_ecoli$codon,
@@ -641,7 +689,7 @@ bar_heights_streptacidiphilus <- barplot(height = RSCU_streptacidiphilus$RSCU,
                                          space = 0.5,  # Same space for consistency
                                           width = 0.4)
 
-
+# Legend 
 legend("topright", 
        legend = c("Escherichia coli", "Streptacidiphilus jiangxiensis"), 
        fill = c(rgb(0, 1, 0, 0.5), rgb(0, 0, 1, 0.5)))
@@ -664,32 +712,48 @@ Legend: A legend indicating which color corresponds to each organism.
 The purpose of this code is to analyze the frequency of k-mers (3-mers, 4-mers, and 5-mers) in the protein sequences of *Escherichia coli* and *Streptacidiphilus jiangxiensis*, and to visualize the top and bottom k-mers for both organisms.
 
 ```r
+# Function to calculate k-mers
 
+# 3-mers Escherichia coli
 ecoli_prot_freq_3 <- seqinr::count(ecoli_proteins, wordsize=3, alphabet=aa_ecoli,freq=TRUE)
 ecoli_prot_freq_3 <- as.data.frame (ecoli_prot_freq_3)
 colnames(ecoli_prot_freq_3)[1] <- "3-mer"
+#If needed to confirm: head(ecoli_prot_freq_3)
 
+# 3-mers Streptacidiphilus jiangxiensis
 streptacidiphilus_prot_freq_3 <- seqinr::count(streptacidiphilus_proteins, wordsize=3, alphabet=aa_streptacidiphilus,freq=TRUE)
 streptacidiphilus_prot_freq_3 <- as.data.frame(streptacidiphilus_prot_freq_3)
 colnames(streptacidiphilus_prot_freq_3)[1] <- "3-mer"
+#If needed to confirm: head(streptacidiphilus_prot_freq_3)
 
+# 4-mers Escherichia coli
 ecoli_prot_freq_4 <- seqinr::count(ecoli_proteins, wordsize=4, alphabet=aa_ecoli, freq=TRUE)
 ecoli_prot_freq_4 <- as.data.frame (ecoli_prot_freq_4)
 colnames(ecoli_prot_freq_4)[1] <- "4-mer"
+#If needed to confirm: head(ecoli_prot_freq_4)
 
+# 4-mers Streptacidiphilus jiangxiensis
 streptacidiphilus_prot_freq_4 <- seqinr::count(streptacidiphilus_proteins, wordsize=4, alphabet=aa_streptacidiphilus,freq=TRUE)
 streptacidiphilus_prot_freq_4 <- as.data.frame(streptacidiphilus_prot_freq_4)
 colnames(streptacidiphilus_prot_freq_4)[1] <- "4-mer"
+#If needed to confirm: head(streptacidiphilus_prot_freq_4)
 
+# 5-mers Escherichia coli
 ecoli_prot_freq_5 <- seqinr::count(ecoli_proteins, wordsize=5, alphabet=aa_ecoli, freq=TRUE)
 ecoli_prot_freq_5 <- as.data.frame (ecoli_prot_freq_5)
 colnames(ecoli_prot_freq_5)[1] <- "5-mer"
+#If needed to confirm: head(ecoli_prot_freq_5)
 
+# 5-mers Streptacidiphilus jiangxiensis
 streptacidiphilus_prot_freq_5 <- seqinr::count(streptacidiphilus_proteins, wordsize=5, alphabet=aa_streptacidiphilus,freq=TRUE)
 streptacidiphilus_prot_freq_5 <- as.data.frame(streptacidiphilus_prot_freq_5)
 colnames(streptacidiphilus_prot_freq_5)[1] <- "5-mer"
+#If needed to confirm: head(streptacidiphilus_prot_freq_5)
 
+# Create a table for each organism with the k-mers and their frequencies
 
+#E. coli
+# Combine k-mer data into one column
 ecoli_kmers <- data.frame(
   Kmer = c(
     as.character(ecoli_prot_freq_3$`3-mer`),
@@ -702,21 +766,30 @@ ecoli_kmers <- data.frame(
     as.numeric(ecoli_prot_freq_5$Freq)
   )
 )
-
+# Ordering the data from most frequent to least frequent
 ecoli_kmers <- ecoli_kmers[order(ecoli_kmers$Frequency, decreasing = TRUE), ]
+#If needed to confirm: head(ecoli_kmers)
 
+
+#Filtering E.coli K-mers with >0 frequency
 ecoli_kmers_filtered <- ecoli_kmers[ecoli_kmers$Frequency > 0, ]
 
+
+#Selecting the 10 most frequent protein sequence k-mers in E.coli
 ecoli_top_10 <- ecoli_kmers_filtered[order(ecoli_kmers_filtered$Frequency, decreasing = TRUE), ][1:10, ]
-View(ecoli_top_10)
+head(ecoli_top_10)
 
+#Selecting the 10 least frequent protein sequence k-mers in E.coli
 ecoli_bottom_10 <- ecoli_kmers_filtered[order(ecoli_kmers_filtered$Frequency), ][1:10, ]
-View(ecoli_bottom_10)
+head(ecoli_bottom_10)
 
+#Selecting and countig E.coli K-mers with 0 frequency
 ecoli_kmers_null <- ecoli_kmers[ecoli_kmers$Frequency == 0, ]
 ecoli_num_kmers_null <- nrow(ecoli_kmers_null)
 cat("Number of E. coli K-mers with 0 frequency:", ecoli_num_kmers_null, "\n")
 
+#S. jiangxiensis
+# Combine k-mer data into one column
 streptacidiphilus_kmers <- data.frame(
   Kmer = c(
     as.character(streptacidiphilus_prot_freq_3$`3-mer`),
@@ -729,21 +802,29 @@ streptacidiphilus_kmers <- data.frame(
     as.numeric(streptacidiphilus_prot_freq_5$Freq)
   )
 )
-
+# Ordering the data from most frequent to least frequent
 streptacidiphilus_kmers <- streptacidiphilus_kmers[order(streptacidiphilus_kmers$Frequency, decreasing = TRUE), ]
+#If needed to confirm: head(streptacidiphilus_kmers)
 
+#Filtering S.jiangxiensis K-mers with >0 frequency
 streptacidiphilus_kmers_filtered <- streptacidiphilus_kmers[streptacidiphilus_kmers$Frequency > 0, ]
 
+#Selecting the 10 most frequent protein sequence k-mers in S.jiangxiensis
 streptacidiphilus_top_10 <- streptacidiphilus_kmers_filtered[order(streptacidiphilus_kmers_filtered$Frequency, decreasing = TRUE), ][1:10, ]
-View(streptacidiphilus_top_10)
+head(streptacidiphilus_top_10)
 
+#Selecting the 10 least frequent protein sequence k-mers in S.jiangxiensis
 streptacidiphilus_bottom_10 <- streptacidiphilus_kmers_filtered[order(streptacidiphilus_kmers_filtered$Frequency), ][1:10, ]
-View(streptacidiphilus_bottom_10)
+head(streptacidiphilus_bottom_10)
 
+
+#Selecting and countig S.jiangxiensis K-mers with 0 frequency
 streptacidiphilus_kmers_null <- streptacidiphilus_kmers[streptacidiphilus_kmers$Frequency == 0, ]
 streptacidiphilus_num_kmers_null <- nrow(streptacidiphilus_kmers_null)
 cat("Number of S. jiangxiensis K-mers with 0 frequency:", streptacidiphilus_num_kmers_null, "\n")
 
+
+#Plot of top 10 E.coli K-mers
 barplot(height=ecoli_top_10$Frequency, 
         names.arg=ecoli_top_10$Kmer,
         col = "lightgreen",
@@ -756,6 +837,7 @@ barplot(height=ecoli_top_10$Frequency,
         ylim = c(0, 0.002))
 grid()
 
+#Plot of top 10 S.jiangxiensis K-mers
 barplot(height=streptacidiphilus_top_10$Frequency, 
         names.arg=streptacidiphilus_top_10$Kmer,
         col = "lightblue",
@@ -768,6 +850,7 @@ barplot(height=streptacidiphilus_top_10$Frequency,
         ylim = c(0, 0.005))
 grid()
 
+#Plot of bottom 10 E.coli K-mers
 barplot(height=ecoli_bottom_10$Frequency, 
         names.arg=ecoli_bottom_10$Kmer,
         col = "lightgreen",
@@ -776,10 +859,11 @@ barplot(height=ecoli_bottom_10$Frequency,
         main="Bottom 10 E.coli K-mers",
         las = 2,  # Rotate labels
         space = 0.5,  
-        width = 0.4,
+        width = 0.4
        )
 grid()
 
+#Plot of bottom 10 S.jiangxiensis K-mers
 barplot(height=streptacidiphilus_bottom_10$Frequency, 
         names.arg=streptacidiphilus_bottom_10$Kmer,
         col = "lightblue",
@@ -788,7 +872,7 @@ barplot(height=streptacidiphilus_bottom_10$Frequency,
         main="Bottom 10 S.jiangxiensis K-mers",
         las = 2,  # Rotate labels
         space = 0.5,  
-        width = 0.4,
+        width = 0.4
         )
 grid()
 
