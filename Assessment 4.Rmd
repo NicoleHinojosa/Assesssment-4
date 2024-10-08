@@ -3,8 +3,8 @@ title: "Assessment 4"
 author: "Nicole Hinojosa, Saqeena Thapa, Vanshika"
 date: "2024-10-03"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 # Part 1: Importing files, data wrangling, mathematical operations, plots and saving code on GitHub.
