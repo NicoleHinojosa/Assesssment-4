@@ -1,0 +1,15 @@
+---
+title: "Assessment 4"
+author: "Nicole Hinojosa, Saqeena Thapa, Vanshika"
+date: "2024-10-03"
+output: html_document
+---
+
+# Part 1: Importing files, data wrangling, mathematical operations, plots and saving code on GitHub.
+
+
+## Introduction
+This report analyzes RNA-seq count data for gene expression and tree circumference measurements at two different sites over a 20-year period. 
+
+## Task 1: RNA-seq count data for gene expression, high and low expression of 3 genes.
+### 1.1 Read in the file “gene_expression.tsv”, making the gene identifiers the row names. Show a table of values for the first six genes.
