@@ -352,7 +352,9 @@ ecoli_dna_composition <- ecoli_dna_df %>% count(base)
 dna_streptacidiphilus <- unlist(streptacidiphilus_seqs)
 streptacidiphilus_dna_df <- data.frame(base = dna_streptacidiphilus)
 streptacidiphilus_dna_composition <- streptacidiphilus_dna_df %>% count(base)
+```
 
+```{r, echo=FALSE}
 # Bar plots
 
 barplot(height=ecoli_dna_composition$n,
@@ -362,6 +364,11 @@ barplot(height=ecoli_dna_composition$n,
         ylab="frequency", 
         main="E. coli CDS composition")
 grid()
+```
+
+```{r, echo=FALSE}
+# Bar plots
+
 barplot(height=streptacidiphilus_dna_composition$n,
         names.arg = streptacidiphilus_dna_composition$base,
         col="lightblue",
@@ -401,7 +408,9 @@ ecoli_aa_freq <- ecoli_proteins_df %>%
 
 streptacidiphilus_aa_freq <- streptacidiphilus_proteins_df %>%
   count(aa)
+```
 
+```{r, echo=FALSE}
 # Bar plots
 barplot(height=ecoli_aa_freq$n,
         names.arg = ecoli_aa_freq$aa,
@@ -410,6 +419,10 @@ barplot(height=ecoli_aa_freq$n,
         ylab="Frequency", 
         main="Amino Acid Frequency in Escherichia coli")
 grid()
+```
+
+```{r, echo=FALSE}
+# Bar plots
 barplot(height=streptacidiphilus_aa_freq$n, 
         names.arg = streptacidiphilus_aa_freq$aa,
         col="lightblue",
@@ -443,7 +456,9 @@ RSCU_streptacidiphilus <- uco(dna_streptacidiphilus,index="rscu",as.data.frame=T
 RSCU_combined <- cbind(RSCU_ecoli, "S. jiangxiensis RSCU"=RSCU_streptacidiphilus$RSCU)
 colnames(RSCU_combined)[5] <- "E. coli RSCU"
 head(RSCU_combined)
+```
 
+```{r, echo=FALSE}
 # Bar plots
 
 # E. coli
@@ -459,7 +474,10 @@ barplot(height=RSCU_ecoli$RSCU,
         width = 0.4,
         ylim = c(0, 4))
 grid()
+```
 
+```{r, echo=FALSE}
+# Bar plots
 # Streptacidiphilus jiangxiensis
  
 barplot(height=RSCU_streptacidiphilus$RSCU, 
@@ -628,8 +646,9 @@ head(streptacidiphilus_bottom_10)
 streptacidiphilus_kmers_null <- streptacidiphilus_kmers[streptacidiphilus_kmers$Frequency == 0, ]
 streptacidiphilus_num_kmers_null <- nrow(streptacidiphilus_kmers_null)
 cat("Number of S. jiangxiensis K-mers with 0 frequency:", streptacidiphilus_num_kmers_null, "\n")
+```
 
-
+```{r, echo=FALSE}
 #Plot of top 10 E.coli K-mers
 barplot(height=ecoli_top_10$Frequency, 
         names.arg=ecoli_top_10$Kmer,
@@ -642,7 +661,9 @@ barplot(height=ecoli_top_10$Frequency,
         width = 0.4,
         ylim = c(0, 0.002))
 grid()
+```
 
+```{r, echo=FALSE}
 #Plot of top 10 S.jiangxiensis K-mers
 barplot(height=streptacidiphilus_top_10$Frequency, 
         names.arg=streptacidiphilus_top_10$Kmer,
@@ -655,7 +676,9 @@ barplot(height=streptacidiphilus_top_10$Frequency,
         width = 0.4,
         ylim = c(0, 0.005))
 grid()
+```
 
+```{r, echo=FALSE}
 #Plot of bottom 10 E.coli K-mers
 barplot(height=ecoli_bottom_10$Frequency, 
         names.arg=ecoli_bottom_10$Kmer,
@@ -668,7 +691,9 @@ barplot(height=ecoli_bottom_10$Frequency,
         width = 0.4
        )
 grid()
+```
 
+```{r, echo=FALSE}
 #Plot of bottom 10 S.jiangxiensis K-mers
 barplot(height=streptacidiphilus_bottom_10$Frequency, 
         names.arg=streptacidiphilus_bottom_10$Kmer,
@@ -746,6 +771,19 @@ WAN, T., GONG, Y., LIU, Z., ZHOU, Y., DAI, C. & WANG, Q. 2022. Evolution of comp
 
 WRIGHT, F. 1990. The 'effective number of codons' used in a gene. Gene, 87, 23-9.
 YANG, Z., LI, H., JIA, Y., ZHENG, Y., MENG, H., BAO, T., LI, X. & LUO, L. 2020. Intrinsic laws of k-mer spectra of genome sequences and evolution mechanism of genomes. BMC Evol Biol, 20, 157.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ```{r, echo=FALSE}
 sessionInfo()
