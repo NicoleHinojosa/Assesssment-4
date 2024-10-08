@@ -331,4 +331,418 @@ The comparison of coding sequence lengths between *Escherichia coli* and *Strept
 
 In contrast, *Streptacidiphilus jiangxiensis* presents a longer mean coding sequence of 973.73 bp and a median of 843 bp, suggesting a more intricate gene structure. This complexity may be indicative of specialized adaptations to its unique ecological niche, which includes survival in acidic environments (Malik et al., 2020). Longer coding sequences can allow for the encoding of more extensive and functionally diverse proteins, potentially enabling the bacterium to exploit a broader range of substrates or cope with environmental stresses (Maharjan and Ferenci, 2014). The differences in coding sequence length may reflect distinct evolutionary pressures faced by these organisms, with *Escherichia coli* evolving for rapid proliferation and *Streptacidiphilus jiangxiensis* potentially developing complex metabolic pathways or interactions to thrive in less hospitable conditions (Wan et al., 2022). This variation underscores the diverse functional requirements and ecological strategies that shape the genomes of bacteria, highlighting how environmental factors influence genetic structure and complexity (Chan et al., 2018).
 
+### 4) Calculate the frequency of DNA bases in the total coding sequences for both organisms. Perform the same calculation for the total protein sequence. Create bar plots for nucleotide and amino acid frequency. Describe any differences between the two organisms.
+
+Frequency of DNA Bases
+
+```{r}
+
+# Calculate base frequencies
+
+dna_ecoli <- unlist(ecoli_seqs)
+ecoli_dna_df <- data.frame(base = dna_ecoli) 
+ecoli_dna_composition <- ecoli_dna_df %>% count(base)  
+
+dna_streptacidiphilus <- unlist(streptacidiphilus_seqs)
+streptacidiphilus_dna_df <- data.frame(base = dna_streptacidiphilus)
+streptacidiphilus_dna_composition <- streptacidiphilus_dna_df %>% count(base)
+
+# Bar plots
+
+barplot(height=ecoli_dna_composition$n,
+        names.arg=ecoli_dna_composition$base,
+        col = "lightgreen",
+        xlab="nucleotides",
+        ylab="frequency", 
+        main="E. coli CDS composition")
+grid()
+barplot(height=streptacidiphilus_dna_composition$n,
+        names.arg = streptacidiphilus_dna_composition$base,
+        col="lightblue",
+        xlab="nucleotides",
+        ylab="frequency", 
+        main="S. jiangxiensis CDS composition")
+grid()
+
+```
+
+Amino Acid Frequency
+
+```{r}
+# Convert coding DNA to protein sequences
+
+ecoli_seqs <- seqinr::read.fasta ("e_coli_cds.fa")
+streptacidiphilus_seqs <- seqinr::read.fasta ("streptacidiphilus_cds.fa")
+
+ecoli_prot <- lapply(ecoli_seqs, translate)
+streptacidiphilus_prot <- lapply(streptacidiphilus_seqs, translate)
+
+
+# Calculate amino acid frequencies
+ecoli_proteins <- unlist (ecoli_prot)
+streptacidiphilus_proteins <-unlist (streptacidiphilus_prot)
+
+aa_ecoli <-unique(ecoli_proteins)
+aa_ecoli <- aa_ecoli[aa_ecoli != "*"]
+aa_streptacidiphilus <- unique(streptacidiphilus_proteins)
+aa_streptacidiphilus <- aa_streptacidiphilus[aa_streptacidiphilus != "*"]
+
+ecoli_proteins_df <- data.frame(aa = ecoli_proteins, stringsAsFactors = FALSE)
+streptacidiphilus_proteins_df <- data.frame(aa = streptacidiphilus_proteins, stringsAsFactors = FALSE)
+
+ecoli_aa_freq <- ecoli_proteins_df %>%
+  count(aa)
+
+streptacidiphilus_aa_freq <- streptacidiphilus_proteins_df %>%
+  count(aa)
+
+# Bar plots
+barplot(height=ecoli_aa_freq$n,
+        names.arg = ecoli_aa_freq$aa,
+        col = "lightgreen",
+        xlab="Aminoacids",
+        ylab="Frequency", 
+        main="Amino Acid Frequency in Escherichia coli")
+grid()
+barplot(height=streptacidiphilus_aa_freq$n, 
+        names.arg = streptacidiphilus_aa_freq$aa,
+        col="lightblue",
+        xlab="Aminoacids",
+        ylab="Frequency", 
+        main="Amino Acid Frequency in Streptacidiphilus jiangxiensis")
+grid()
+```
+
+##### Answer: 
+
+The observation that *Escherichia coli* exhibits a relatively even distribution of nucleotides—where adenine (A), thymine (T), cytosine (C), and guanine (G) are present in comparable proportions—contrasts sharply with the significantly higher CG content observed in *Streptacidiphilus jiangxiensis*. This difference in nucleotide composition can have profound implications for the evolutionary strategies and ecological niches occupied by these two bacteria (Malik et al., 2020). The balanced nucleotide composition in *E. coli* reflects its adaptation to a diverse range of environments, particularly in the nutrient-rich gastrointestinal tracts of mammals, where rapid replication and metabolic efficiency are advantageous (Alteri and Mobley, 2012). In contrast, the elevated CG content in *Streptacidiphilus* may indicate specialized adaptations to more extreme or variable environmental conditions, such as those found in soil ecosystems. Higher GC content can contribute to increased stability of the DNA helix and may be linked to resistance against environmental stresses, such as desiccation or temperature fluctuations (Šmarda et al., 2014). Moreover, elevated CG content can affect gene expression and regulation, allowing *Streptacidiphilus* to potentially encode proteins that facilitate survival in nutrient-poor or competitive environments. Thus, the differences in nucleotide composition not only reflect the evolutionary histories of these bacteria but also underscore their distinct ecological strategies and adaptations to their respective habitats (Hu et al., 2022).
+
+The differences in amino acid frequency between *Escherichia coli* and *Streptacidiphilus jiangxiensis* not only reveal evolutionary adaptations but also highlight functional specializations that may be crucial for each organism's survival in their respective environments. In *E. coli*, the five most frequent amino acids—leucine (L), alanine (A), glycine (G), valine (V), and isoleucine (I)—suggest a protein composition that supports its versatile metabolic functions and adaptability. Leucine, being the most abundant, is known for its role in protein synthesis and cellular signaling, indicating a potential emphasis on growth and reproduction (Maser et al., 2020).
+
+Conversely, *Streptacidiphilus jiangxiensis* shows a slightly different pattern, with alanine (A), leucine (L), glycine (G), valine (V), and arginine (R) as the five most frequent amino acids. The presence of arginine in this top five may indicate specific adaptations related to stress responses or metabolic processes unique to its ecological niche. The dominance of alanine, along with the other branched-chain amino acids, suggests that *Streptacidiphilus* might be optimized for particular biochemical pathways that enable it to thrive in potentially nutrient-poor or competitive environments (Koonin, 2009).
+
+These variations in amino acid frequencies not only reflect the distinct metabolic capabilities of each organism but also offer insights into how they might respond to environmental challenges. For instance, the higher frequency of arginine in *Streptacidiphilus* may confer advantages in environments requiring enhanced nitrogen metabolism or stress resilience (Chen et al., 2021). Thus, examining the amino acid composition provides a deeper understanding of the functional diversity and ecological adaptations of these two bacteria, shedding light on their evolutionary trajectories in different ecological contexts (Monteiro et al., 2023).
+
+
+### 5) Create a codon usage table and quantify the codon usage bias among all coding sequences. Describe any differences between the two organisms with respect to their codon usage bias. Provide charts to support your observations.
+
+Codon Usage Bias
+
+```{r}
+# Create codon usage tables
+RSCU_ecoli <- uco(dna_ecoli,index="rscu",as.data.frame=TRUE)
+RSCU_streptacidiphilus <- uco(dna_streptacidiphilus,index="rscu",as.data.frame=TRUE)
+
+# Create a combined table
+RSCU_combined <- cbind(RSCU_ecoli, "S. jiangxiensis RSCU"=RSCU_streptacidiphilus$RSCU)
+colnames(RSCU_combined)[5] <- "E. coli RSCU"
+head(RSCU_combined)
+
+# Bar plots
+
+# E. coli
+
+barplot(height=RSCU_ecoli$RSCU, 
+        names.arg=RSCU_ecoli$codon,
+        col = "lightgreen",
+        xlab= "Codons",
+        ylab="Relative Synonymous Codon Usage",
+        main="Codon Usage Bias in Escherichia coli",
+        las = 2,  # Rotate labels
+        space = 0.5,  # Reduce space between bars
+        width = 0.4,
+        ylim = c(0, 4))
+grid()
+
+# Streptacidiphilus jiangxiensis
+ 
+barplot(height=RSCU_streptacidiphilus$RSCU, 
+        names.arg=RSCU_streptacidiphilus$codon,
+        col = "lightblue",
+        xlab= "Codons",
+        ylab="Relative Synonymous Codon Usage", 
+        main="Codon Usage in Streptacidiphilus jiangxiensis",
+        las = 2,  # Rotate labels
+        space = 0.5,  # Reduce space between bars
+        width = 0.4,
+        ylim = c(0, 4))
+grid()
+```
+
+Overlay the two barplots to compare the RSCU between the two organisms.
+
+```{r}
+
+# Comparing two barplots
+
+bar_heights_ecoli <- barplot(height = RSCU_ecoli$RSCU, 
+                              names.arg = RSCU_ecoli$codon,
+                              col = rgb(0, 1, 0, 0.5),  # Transparent green
+                              xlab = "Codons",
+                              ylab = "Relative Synonymous Codon Usage",
+                              main = "Codon Usage Bias",
+                              las = 2,  # Rotate labels
+                              space = 0.5,  # Reduce space between bars
+                              width = 0.4,
+                              ylim = c(0, 3.8))  # Set proper limits for y-axis
+
+
+bar_heights_streptacidiphilus <- barplot(height = RSCU_streptacidiphilus$RSCU, 
+                                          col = rgb(0, 0, 1, 0.5),  # Transparent blue
+                                          add = TRUE,  # Overlay on the existing plot
+                                          las = 2,  # Rotate labels
+                                         space = 0.5,  # Same space for consistency
+                                          width = 0.4)
+
+# Legend 
+legend("topright", 
+       legend = c("Escherichia coli", "Streptacidiphilus jiangxiensis"), 
+       fill = c(rgb(0, 1, 0, 0.5), rgb(0, 0, 1, 0.5)))
+
+grid()
+```
+
+#####Answer: 
+
+The comparison of codon usage bias between *Escherichia coli* and *Streptacidiphilus jiangxiensis* reveals intriguing insights into their evolutionary adaptations and functional capabilities. In *E. coli*, the Relative Synonymous Codon Usage (RSCU) is notably high for codons such as CTG, CGC, CGT, CCG, and TAA, indicating a preference for these codons in highly expressed genes (Stoletzki and Eyre-Walker, 2006). This pattern suggests that *E. coli* has evolved to optimize its translational efficiency and speed in its typical environments, which often include nutrient-rich conditions that favor rapid growth and division (Lipinszki et al., 2018). Conversely, *Streptacidiphilus jiangxiensis* exhibits a distinct codon usage bias with elevated RSCU values for CTG, CGC, ATC, ACC, and GGC. The presence of ATC and ACC among the preferred codons indicates a potential adaptation to a different ecological niche, possibly involving specialized metabolic functions or responses to varying environmental pressures. These differences in codon preference may reflect the organisms' evolutionary histories, metabolic versatility, and ecological roles (Tyagi et al., 2023), with *Streptacidiphilus* possibly relying on a broader array of substrates or exhibiting different growth strategies compared to the more straightforward, rapid proliferation of *E. coli*. Understanding these patterns can provide deeper insights into how these bacteria interact with their environments and adapt to the challenges they face (Chan et al., 2018).
+
+
+#### 6) In the organism of interest, identify 10 protein sequence k-mers of length 3-5 which are the most over- and under-represented k-mers in your organism of interest. Are these k-mers also over- and under-represented in E. coli to a similar extent? Provide plots to support your observations. Why do you think these sequences are present at different levels in the genomes of these organisms?
+
+K-mer Analysis
+
+```{r}
+# Function to calculate k-mers
+
+# 3-mers Escherichia coli
+ecoli_prot_freq_3 <- seqinr::count(ecoli_proteins, wordsize=3, alphabet=aa_ecoli,freq=TRUE)
+ecoli_prot_freq_3 <- as.data.frame (ecoli_prot_freq_3)
+colnames(ecoli_prot_freq_3)[1] <- "3-mer"
+#If needed to confirm: head(ecoli_prot_freq_3)
+
+# 3-mers Streptacidiphilus jiangxiensis
+streptacidiphilus_prot_freq_3 <- seqinr::count(streptacidiphilus_proteins, wordsize=3, alphabet=aa_streptacidiphilus,freq=TRUE)
+streptacidiphilus_prot_freq_3 <- as.data.frame(streptacidiphilus_prot_freq_3)
+colnames(streptacidiphilus_prot_freq_3)[1] <- "3-mer"
+#If needed to confirm: head(streptacidiphilus_prot_freq_3)
+
+# 4-mers Escherichia coli
+ecoli_prot_freq_4 <- seqinr::count(ecoli_proteins, wordsize=4, alphabet=aa_ecoli, freq=TRUE)
+ecoli_prot_freq_4 <- as.data.frame (ecoli_prot_freq_4)
+colnames(ecoli_prot_freq_4)[1] <- "4-mer"
+#If needed to confirm: head(ecoli_prot_freq_4)
+
+# 4-mers Streptacidiphilus jiangxiensis
+streptacidiphilus_prot_freq_4 <- seqinr::count(streptacidiphilus_proteins, wordsize=4, alphabet=aa_streptacidiphilus,freq=TRUE)
+streptacidiphilus_prot_freq_4 <- as.data.frame(streptacidiphilus_prot_freq_4)
+colnames(streptacidiphilus_prot_freq_4)[1] <- "4-mer"
+#If needed to confirm: head(streptacidiphilus_prot_freq_4)
+
+# 5-mers Escherichia coli
+ecoli_prot_freq_5 <- seqinr::count(ecoli_proteins, wordsize=5, alphabet=aa_ecoli, freq=TRUE)
+ecoli_prot_freq_5 <- as.data.frame (ecoli_prot_freq_5)
+colnames(ecoli_prot_freq_5)[1] <- "5-mer"
+#If needed to confirm: head(ecoli_prot_freq_5)
+
+# 5-mers Streptacidiphilus jiangxiensis
+streptacidiphilus_prot_freq_5 <- seqinr::count(streptacidiphilus_proteins, wordsize=5, alphabet=aa_streptacidiphilus,freq=TRUE)
+streptacidiphilus_prot_freq_5 <- as.data.frame(streptacidiphilus_prot_freq_5)
+colnames(streptacidiphilus_prot_freq_5)[1] <- "5-mer"
+#If needed to confirm: head(streptacidiphilus_prot_freq_5)
+
+# Create a table for each organism with the k-mers and their frequencies
+
+#E. coli
+# Combine k-mer data into one column
+ecoli_kmers <- data.frame(
+  Kmer = c(
+    as.character(ecoli_prot_freq_3$`3-mer`),
+    as.character(ecoli_prot_freq_4$`4-mer`),
+    as.character(ecoli_prot_freq_5$`5-mer`)
+  ),
+  Frequency = c(
+    as.numeric(ecoli_prot_freq_3$Freq),
+    as.numeric(ecoli_prot_freq_4$Freq),
+    as.numeric(ecoli_prot_freq_5$Freq)
+  )
+)
+# Ordering the data from most frequent to least frequent
+ecoli_kmers <- ecoli_kmers[order(ecoli_kmers$Frequency, decreasing = TRUE), ]
+#If needed to confirm: head(ecoli_kmers)
+
+
+#Filtering E.coli K-mers with >0 frequency
+ecoli_kmers_filtered <- ecoli_kmers[ecoli_kmers$Frequency > 0, ]
+
+
+#Selecting the 10 most frequent protein sequence k-mers in E.coli
+ecoli_top_10 <- ecoli_kmers_filtered[order(ecoli_kmers_filtered$Frequency, decreasing = TRUE), ][1:10, ]
+head(ecoli_top_10)
+
+#Selecting the 10 least frequent protein sequence k-mers in E.coli
+ecoli_bottom_10 <- ecoli_kmers_filtered[order(ecoli_kmers_filtered$Frequency), ][1:10, ]
+head(ecoli_bottom_10)
+
+#Selecting and countig E.coli K-mers with 0 frequency
+ecoli_kmers_null <- ecoli_kmers[ecoli_kmers$Frequency == 0, ]
+ecoli_num_kmers_null <- nrow(ecoli_kmers_null)
+cat("Number of E. coli K-mers with 0 frequency:", ecoli_num_kmers_null, "\n")
+
+#S. jiangxiensis
+# Combine k-mer data into one column
+streptacidiphilus_kmers <- data.frame(
+  Kmer = c(
+    as.character(streptacidiphilus_prot_freq_3$`3-mer`),
+    as.character(streptacidiphilus_prot_freq_4$`4-mer`),
+    as.character(streptacidiphilus_prot_freq_5$`5-mer`)
+  ),
+  Frequency = c(
+    as.numeric(streptacidiphilus_prot_freq_3$Freq),
+    as.numeric(streptacidiphilus_prot_freq_4$Freq),
+    as.numeric(streptacidiphilus_prot_freq_5$Freq)
+  )
+)
+# Ordering the data from most frequent to least frequent
+streptacidiphilus_kmers <- streptacidiphilus_kmers[order(streptacidiphilus_kmers$Frequency, decreasing = TRUE), ]
+#If needed to confirm: head(streptacidiphilus_kmers)
+
+#Filtering S.jiangxiensis K-mers with >0 frequency
+streptacidiphilus_kmers_filtered <- streptacidiphilus_kmers[streptacidiphilus_kmers$Frequency > 0, ]
+
+#Selecting the 10 most frequent protein sequence k-mers in S.jiangxiensis
+streptacidiphilus_top_10 <- streptacidiphilus_kmers_filtered[order(streptacidiphilus_kmers_filtered$Frequency, decreasing = TRUE), ][1:10, ]
+head(streptacidiphilus_top_10)
+
+#Selecting the 10 least frequent protein sequence k-mers in S.jiangxiensis
+streptacidiphilus_bottom_10 <- streptacidiphilus_kmers_filtered[order(streptacidiphilus_kmers_filtered$Frequency), ][1:10, ]
+head(streptacidiphilus_bottom_10)
+
+
+#Selecting and countig S.jiangxiensis K-mers with 0 frequency
+streptacidiphilus_kmers_null <- streptacidiphilus_kmers[streptacidiphilus_kmers$Frequency == 0, ]
+streptacidiphilus_num_kmers_null <- nrow(streptacidiphilus_kmers_null)
+cat("Number of S. jiangxiensis K-mers with 0 frequency:", streptacidiphilus_num_kmers_null, "\n")
+
+
+#Plot of top 10 E.coli K-mers
+barplot(height=ecoli_top_10$Frequency, 
+        names.arg=ecoli_top_10$Kmer,
+        col = "lightgreen",
+        xlab= "K-mers",
+        ylab="Frequency",
+        main="Top 10 E.coli K-mers",
+        las = 2,  # Rotate labels
+        space = 0.5,  
+        width = 0.4,
+        ylim = c(0, 0.002))
+grid()
+
+#Plot of top 10 S.jiangxiensis K-mers
+barplot(height=streptacidiphilus_top_10$Frequency, 
+        names.arg=streptacidiphilus_top_10$Kmer,
+        col = "lightblue",
+        xlab= "K-mers",
+        ylab="Frequency",
+        main="Top 10 S.jiangxiensis K-mers",
+        las = 2,  # Rotate labels
+        space = 0.5,  
+        width = 0.4,
+        ylim = c(0, 0.005))
+grid()
+
+#Plot of bottom 10 E.coli K-mers
+barplot(height=ecoli_bottom_10$Frequency, 
+        names.arg=ecoli_bottom_10$Kmer,
+        col = "lightgreen",
+        xlab= "K-mers",
+        ylab="Frequency",
+        main="Bottom 10 E.coli K-mers",
+        las = 2,  # Rotate labels
+        space = 0.5,  
+        width = 0.4
+       )
+grid()
+
+#Plot of bottom 10 S.jiangxiensis K-mers
+barplot(height=streptacidiphilus_bottom_10$Frequency, 
+        names.arg=streptacidiphilus_bottom_10$Kmer,
+        col = "lightblue",
+        xlab= "K-mers",
+        ylab="Frequency",
+        main="Bottom 10 S.jiangxiensis K-mers",
+        las = 2,  # Rotate labels
+        space = 0.5,  
+        width = 0.4
+        )
+grid()
+
+```
+
+#####Answer: 
+
+The analysis of k-mer frequency in proteins offers valuable insights into the evolutionary strategies and functional adaptations of *Escherichia coli* and *Streptacidiphilus jiangxiensis*. The top 10 k-mers in *E. coli*, which include sequences like LLA, ALA, and ALL, predominantly feature leucine (L) and alanine (A). This amino acid composition suggests a potential focus on proteins that require flexibility and structural stability, characteristics that are essential for E. coli’s rapid growth and metabolic efficiency in nutrient-rich environments, such as the intestines of warm-blooded animals (Yang et al., 2020). The abundance of leucine, known for its role in protein synthesis and cellular metabolism, may enhance the organism's ability to adapt quickly to varying nutrient availability, providing a competitive advantage in diverse ecological niches (Tian et al., 2017).
+
+In contrast, *Streptacidiphilus jiangxiensis* presents a different k-mer profile, with its top sequences such as AAA and AAG indicating a higher representation of alanine and a notable presence of arginine (R). The inclusion of arginine in its protein repertoire may enable *Streptacidiphilus* to engage in a wider range of metabolic pathways, including nitrogen metabolism and stress responses, which are critical for survival in the variable soil environments it inhabits. This greater diversity in k-mers suggests a more complex protein structure that may facilitate specialized functions, such as the synthesis of secondary metabolites that help in nutrient acquisition and competition with other soil microorganisms (Yang et al., 2020).
+
+The contrasting least frequent k-mers further illuminate these differences. For example, *E. coli* contains k-mers like MWC and AACW, which may correspond to rare or less-utilized protein motifs, possibly limiting its capacity to produce certain proteins under specific environmental conditions. Meanwhile, *Streptacidiphilus* features k-mers such as CMK and FRX, which may represent unique adaptations or niche-specific proteins that enhance its survival in less competitive environments. The presence of such rare sequences could confer the ability to utilize specific substrates or produce bioactive compounds that aid in survival and competitive advantage in its soil habitat (Bussi et al., 2021).
+
+Overall, the differences in k-mer frequency between these two organisms reveal not only their distinct evolutionary paths but also their strategies for thriving in their respective environments. E. coli's k-mer composition supports rapid growth and adaptability in rich environments, while Streptacidiphilus’s diverse k-mer patterns likely enhance its metabolic versatility and ecological resilience in variable soil ecosystems.
+
+## References
+
+ALTERI, C. J. & MOBLEY, H. L. 2012. Escherichia coli physiology and metabolism dictates adaptation to diverse host microenvironments. Curr Opin Microbiol, 15, 3-9.
+
+BENTLEY, S. 2009. Sequencing the species pan-genome. Nat Rev Microbiol, 7, 258-9.
+
+BUSSI, Y., KAPON, R. & REICH, Z. 2021. Large-scale k-mer-based analysis of the informational properties of genomes, comparative genomics and taxonomy. PLoS One, 16, e0258693.
+
+CHAN, C., PHAM, P., DEDON, P. C. & BEGLEY, T. J. 2018. Lifestyle modifications: coordinating the tRNA epitranscriptome with codon bias to adapt translation during stress responses. Genome Biology, 19, 228.
+
+CHEN, Q., WANG, Y., ZHANG, Z., LIU, X., LI, C. & MA, F. 2021. Arginine Increases Tolerance to Nitrogen Deficiency in Malus hupehensis via Alterations in Photosynthetic Capacity and Amino Acids Metabolism. Front Plant Sci, 12, 772086.
+
+CONG, W., YU, J., FENG, K., DENG, Y. & ZHANG, Y. 2021. The Coexistence Relationship Between Plants and Soil Bacteria Based on Interdomain Ecological Network Analysis. Front Microbiol, 12, 745582.
+
+HARMAN, G. E. & UPHOFF, N. 2019. Symbiotic Root-Endophytic Soil Microbes Improve Crop Productivity and Provide Environmental Benefits. Scientifica (Cairo), 2019, 9106395.
+
+HU, E. Z., LAN, X. R., LIU, Z. L., GAO, J. & NIU, D. K. 2022. A positive correlation between GC content and growth temperature in prokaryotes. BMC Genomics, 23, 110.
+
+HUANG, Y., CUI, Q., WANG, L., RODRIGUEZ, C., QUINTANA, E., GOODFELLOW, M. & LIU, Z. 2004. Streptacidiphilus jiangxiensis sp. nov., a novel actinomycete isolated from acidic rhizosphere soil in China. Antonie van Leeuwenhoek, 86, 159-165.
+
+JAROCKI, V. M., REID, C. J., CHAPMAN, T. A. & DJORDJEVIC, S. P. 2019. Escherichia coli ST302: Genomic Analysis of Virulence Potential and Antimicrobial Resistance Mediated by Mobile Genetic Elements. Front Microbiol, 10, 3098.
+
+KOONIN, E. V. 2009. Evolution of genome architecture. Int J Biochem Cell Biol, 41, 298-306.
+
+LIPINSZKI, Z., VERNYIK, V., FARAGO, N., SARI, T., PUSKAS, L. G., BLATTNER, F. R., POSFAI, G. & GYORFY, Z. 2018. Enhancing the Translational Capacity of E. coli by Resolving the Codon Bias. ACS Synthetic Biology, 7, 2656-2664.
+
+LIZANA, L. & SCHWARTZ, Y. B. 2024. The scales, mechanisms, and dynamics of the genome architecture. Sci Adv, 10, eadm8167.
+
+LOZICA, L., VILLUMSEN, K. R., LI, G., HU, X., MALJKOVIć, M. M. & GOTTSTEIN, Ž. 2022. Genomic Analysis of Escherichia coli Longitudinally Isolated from Broiler Breeder Flocks after the Application of an Autogenous Vaccine. Microorganisms, 10.
+
+MAHARJAN, R. & FERENCI, T. 2014. Mutational Signatures Indicative of Environmental Stress in Bacteria. Molecular Biology and Evolution, 32, 380-391.
+
+MALIK, A., KIM, Y. R. & KIM, S. B. 2020. Genome Mining of the Genus Streptacidiphilus for Biosynthetic and Biodegradation Potential. Genes (Basel), 11.
+
+MASER, A., PEEBO, K., VILU, R. & NAHKU, R. 2020. Amino acids are key substrates to Escherichia coli BW25113 for achieving high specific growth rate. Res Microbiol, 171, 185-193.
+
+MONTEIRO, L. D. F. R., GIRALDI, L. A. & WINCK, F. V. 2023. From Feasting to Fasting: The Arginine Pathway as a Metabolic Switch in Nitrogen-Deprived Chlamydomonas reinhardtii. Cells, 12, 1379.
+
+RASKO, D. A., ROSOVITZ, M. J., MYERS, G. S. A., MONGODIN, E. F., FRICKE, W. F., GAJER, P., CRABTREE, J., SEBAIHIA, M., THOMSON, N. R., CHAUDHURI, R., HENDERSON, I. R., SPERANDIO, V. & RAVEL, J. 2008. The Pangenome Structure of <i>Escherichia coli</i>: Comparative Genomic Analysis of <i>E. coli</i> Commensal and Pathogenic Isolates. Journal of Bacteriology, 190, 6881-6893.
+
+ŠMARDA, P., BUREš, P., HOROVá, L., LEITCH, I. J., MUCINA, L., PACINI, E., TICHý, L., GRULICH, V. & ROTREKLOVá, O. 2014. Ecological and evolutionary significance of genomic GC content diversity in monocots. Proc Natl Acad Sci U S A, 111, E4096-102.
+
+STOLETZKI, N. & EYRE-WALKER, A. 2006. Synonymous Codon Usage in Escherichia coli: Selection for Translational Accuracy. Molecular Biology and Evolution, 24, 374-381.
+
+TIAN, J., YAN, Y., YUE, Q., LIU, X., CHU, X., WU, N. & FAN, Y. 2017. Predicting synonymous codon usage and optimizing the heterologous gene for expression in E. coli. Scientific Reports, 7, 9926.
+
+TYAGI, S., KABADE, P. G., GNANAPRAGASAM, N., SINGH, U. M., GURJAR, A. K. S., RAI, A., SINHA, P., KUMAR, A. & SINGH, V. K. 2023. Codon Usage Provide Insights into the Adaptation of Rice Genes under Stress Condition. Int J Mol Sci, 24.
+
+WAN, T., GONG, Y., LIU, Z., ZHOU, Y., DAI, C. & WANG, Q. 2022. Evolution of complex genome architecture in gymnosperms. GigaScience, 11.
+
+WRIGHT, F. 1990. The 'effective number of codons' used in a gene. Gene, 87, 23-9.
+YANG, Z., LI, H., JIA, Y., ZHENG, Y., MENG, H., BAO, T., LI, X. & LUO, L. 2020. Intrinsic laws of k-mer spectra of genome sequences and evolution mechanism of genomes. BMC Evol Biol, 20, 157.
+
+```{r}
+sessionInfo()
+```
+
 
