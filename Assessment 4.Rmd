@@ -68,3 +68,51 @@ top_genes <- gene_expression %>%
 # Print the top genes
 print(top_genes)
 ```
+
+### 1.4 Determine the number of genes with a mean <10.
+
+Count Genes with Low Expression (Mean < 10)
+```{r}
+# Determine the number of genes with a mean < 10
+num_genes_below_10 <- sum(gene_expression$mean_expression < 10)
+
+# Print the number of genes
+print(num_genes_below_10)
+```
+
+### 1.5 Make a histogram plot of the mean values and include it into your report.
+
+Histogram of <10, Mean Values
+```{r}
+# Make a histogram plot of the mean values
+filtered_data <- gene_expression[gene_expression$mean_expression < 10, ]
+ggplot(filtered_data, aes(x = mean_expression)) +
+  geom_histogram( binwidth = 1, fill = "orange", color = "black") +
+  labs(title = "Histogram of Mean Low Gene Expression", x = "Mean Expression", y = "Frequency") +
+  theme_minimal()
+
+
+# Save the plot to your report
+ggsave("histogram_mean_low_gene_expression.png")
+```
+
+## Task 2: Tree circumference measurements over 20 years.
+
+### 2.1 Import “growth_data.csv” file into an R object. What are the column names?
+
+Read Data to perfrorm a Tree Circumference Data Analysis
+
+```{r}
+# Read in the growth data
+#Download the data from the github link provided
+URL = "https://raw.githubusercontent.com/ghazkha/Assessment4/refs/heads/main/growth_data.csv"
+download.file(URL, destfile = "growth_data.csv")
+
+# Read the downloaded TSV file into R
+growth_data <- read.csv("growth_data.csv")
+
+View(growth_data)
+
+# Show column names
+cat("The column names are:", colnames(growth_data))
+```
