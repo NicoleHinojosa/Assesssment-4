@@ -215,3 +215,87 @@ Mean Comparison: The mean growth in the northeast (42.94 cm) is higher than that
 
 Confidence Interval: The confidence interval includes zero, which means we cannot conclusively say that there is a true difference in growth between the two sites. The upper limit (15.29 cm) indicates that, while the northeast shows higher growth, it is possible that the actual difference might be minimal or even negative.
 
+# Part 2: Examining biological sequence diversity
+
+## Introduction
+
+This report compares the sequence features of *Streptacidiphilus jiangxiensis* (GCA_900109465) with *Escherichia coli*.
+*Escherichia coli* is a Gram-negative, rod-shaped bacterium commonly found in the intestines of warm-blooded organisms, playing a vital role in gut health. While some strains of *Escherichia coli* can cause illnesses, the bacterium is extensively used as a model organism in molecular biology due to its relatively simple genome and well-studied genetics. In contrast, *Streptacidiphilus jiangxiensis* is a Gram-positive bacterium isolated from acidic environments (Huang et al., 2004). This species is characterized by its unique metabolic pathways and adaptations to specific ecological niches, which may hold potential for applications in bioremediation or antibiotic development.
+
+## Questions:
+
+### 1) Download the whole set of coding DNA sequences for E. coli and your organism of interest. How many coding sequences are present in these organisms? Present this in the form of a table. Describe any differences between the two organisms. 
+
+Sequences
+
+```{r}
+
+# URLs for the coding DNA sequences
+URL_Ecoli <- "https://ftp.ensemblgenomes.ebi.ac.uk/pub/bacteria/release-59/fasta/bacteria_117_collection/escherichia_coli_110957_gca_000485615/cds/Escherichia_coli_110957_gca_000485615.ASM48561v1.cds.all.fa.gz"
+URL_Streptacidiphilus <- "https://ftp.ensemblgenomes.ebi.ac.uk/pub/bacteria/release-59/fasta/bacteria_57_collection/streptacidiphilus_jiangxiensis_gca_900109465/cds/Streptacidiphilus_jiangxiensis_gca_900109465.IMG-taxon_2675903135_annotated_assembly.cds.all.fa.gz"
+
+# Downloading the sequences
+download.file(URL_Ecoli, destfile = "e_coli_cds.fa.gz")
+download.file(URL_Streptacidiphilus, destfile = "streptacidiphilus_cds.fa.gz")
+
+#Decompress the files
+
+gunzip("e_coli_cds.fa.gz")
+gunzip("streptacidiphilus_cds.fa.gz")
+
+# Reading the sequences
+ecoli_seqs <- seqinr::read.fasta ("e_coli_cds.fa")
+streptacidiphilus_seqs <- seqinr::read.fasta ("streptacidiphilus_cds.fa")
+```
+
+CDS count
+
+```{r}
+# Count coding sequences
+ecoli_count <- length (ecoli_seqs)
+streptacidiphilus_count <- length (streptacidiphilus_seqs)
+
+# Creating a summary table
+coding_counts <- data.frame(
+  Organism = c("Escherichia coli", "Streptacidiphilus jiangxiensis"),
+  Coding_Sequences = c(ecoli_count, streptacidiphilus_count)
+)
+
+coding_counts
+```
+
+##### Answer: 
+
+*Escherichia coli* contains 4,931 coding sequences while *Streptacidiphilus jiangxiensis* has a substantially higher count (8,650) of coding sequences, points to a significant disparity in genetic diversity between the two bacterial species. This greater number of coding sequences in *Streptacidiphilus  jiangxiensis* is indicative of a more complex genetic framework, which may translate into enhanced functional capabilities and a broader range of physiological adaptations (Wright, 1990, Malik et al., 2020).
+
+The expanded repertoire of genes in *Streptacidiphilus  jiangxiensis* likely contributes to its metabolic versatility, enabling it to thrive in diverse environments. This versatility allows *Streptacidiphilus  jiangxiensis* to exploit various substrates, potentially including organic compounds found in soil or plant matter, that *Escherichia coli* might not utilize as efficiently. For example, *Streptacidiphilus  jiangxiensis* may possess unique enzymes or metabolic pathways that allow it to break down complex carbohydrates, synthesize essential nutrients, or produce secondary metabolites, such as antimicrobial compounds, which can offer competitive advantages in its ecological niche (Wright, 1990).
+
+Moreover, the increased number of coding sequences may also reflect evolutionary adaptations to environmental pressures. In soil ecosystems, where nutrient availability can fluctuate, the ability to produce a wide range of enzymes and metabolites could enhance survival and reproduction (Harman and Uphoff, 2019). *Streptacidiphilus  jiangxiensis* may engage in symbiotic relationships with plants or other soil microorganisms, leveraging its genetic diversity to facilitate nutrient exchange or improve soil health (Cong et al., 2021). In contrast, *Escherichia coli*, while highly adaptable and successful in its own right, is often more specialized for life in nutrient-rich environments, such as the gastrointestinal tract of mammals. Thus, the greater coding sequence count in *Streptacidiphilus  jiangxiensis* underscores its potential for metabolic innovation and ecological resilience, reflecting a sophisticated evolutionary response to its environment (Wright, 1990; Malik et al., 2020).
+
+### 2) How much coding DNA is there in total for these two organisms? Present this in the form of a table. Describe any differences between the two organisms.
+
+Total Coding DNA Length
+
+```{r}
+# Calculate total coding DNA length
+ecoli_length <- as.numeric(summary(ecoli_seqs)[,1])
+streptacidiphilus_length <- as.numeric(summary(streptacidiphilus_seqs)[,1])
+
+# Creating a summary table
+total_lengths <- data.frame(
+  Organism = c("Escherichia coli", "Streptacidiphilus jiangxiensis"),
+  Total_Length = c(sum(ecoli_length), sum(streptacidiphilus_length))
+)
+
+total_lengths
+```
+
+##### Answer: 
+
+The genomic analysis reveals that *Escherichia coli* comprises approximately 4,593,474 base pairs of coding DNA, whereas *Streptacidiphilus jiangxiensis* possesses a significantly larger genomic footprint of about 8,422,779 base pairs. This substantial difference in coding DNA indicates a more complex genome in *Streptacidiphilus*, which is often associated with greater metabolic diversity. A larger genomic content can provide a broader array of genes, facilitating the synthesis of diverse proteins that are crucial for various metabolic pathways and biochemical processes (Bentley, 2009).
+
+The expanded coding capacity of *Streptacidiphilus* likely equips it with the ability to thrive in complex and potentially harsh environmental conditions. For instance, the organism might possess genes that allow it to metabolize a wider range of substrates, adapt to changes in nutrient availability, or withstand environmental stresses, such as acidity or high salinity (Rasko et al., 2008). Such metabolic versatility could enable *Streptacidiphilus* to exploit ecological niches that are less accessible to simpler organisms like *E. coli*, which tends to thrive in nutrient-rich environments typical of the mammalian gut (Lozica et al., 2022).
+
+Furthermore, the increased genetic content in *Streptacidiphilus* may include genes responsible for specialized functions, such as biosynthesis of secondary metabolites, antibiotic resistance, or symbiotic interactions with other organisms (Jarocki et al., 2019). These attributes are particularly valuable for survival in competitive ecosystems where resource availability can be unpredictable. In essence, the larger coding DNA in *Streptacidiphilus jiangxiensis* reflects an evolutionary strategy that enhances its adaptability and functional repertoire, illustrating how genomic complexity can influence ecological success and resilience (Huang et al., 2004).
+
+
