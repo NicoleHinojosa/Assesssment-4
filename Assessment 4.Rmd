@@ -12,4 +12,59 @@ output: html_document
 This report analyzes RNA-seq count data for gene expression and tree circumference measurements at two different sites over a 20-year period. 
 
 ## Task 1: RNA-seq count data for gene expression, high and low expression of 3 genes.
+
 ### 1.1 Read in the file “gene_expression.tsv”, making the gene identifiers the row names. Show a table of values for the first six genes.
+
+1) Load libraries
+```{r}
+#RNA-seq Count Data Analysis
+#Load necessary libraries
+library(R.utils)
+#use BiocManager::install("Biostrings") if it is not already installed in your Rstudio
+library(Biostrings)
+library(seqinr)
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(tidyr)
+```
+
+2) Read in the gene expression data
+```{r}
+#Download the data from the github link provided
+URL = "https://raw.githubusercontent.com/ghazkha/Assessment4/refs/heads/main/gene_expression.tsv"
+download.file(URL, destfile = "gene_expression.tsv")
+
+# Read the downloaded TSV file into R
+gene_expression <- read.table("gene_expression.tsv", header = TRUE, sep = "\t", row.names = 1)
+```
+
+3) 1st First 6 rows of the gene_expression data
+```{r}
+# View the first few rows of the data
+head(n=6, gene_expression)
+View( head (n=6, gene_expression))
+```
+
+### 1.2 Make a new column which is the mean of the other columns. Show a table of values for the first six genes.
+
+Calculate Mean Expression
+```{r}
+# Calculate the mean across the samples and add as a new column
+gene_expression <- gene_expression %>%
+  mutate(mean_expression = rowMeans(select(., everything())))
+# Show a table of values for the first six genes including the mean
+head(n=6, gene_expression)
+```
+
+### 1.3 List the 10 genes with the highest mean expression.
+
+Identify Top 10 Genes
+```{r}
+# List the 10 genes with the highest mean expression
+top_genes <- gene_expression %>%
+  arrange(desc(mean_expression)) %>%
+  head(10)
+# Print the top genes
+print(top_genes)
+```
