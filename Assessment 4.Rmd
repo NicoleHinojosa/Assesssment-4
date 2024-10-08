@@ -3,8 +3,8 @@ title: "Assessment 4"
 author: "Nicole Hinojosa, Saqeena Thapa, Vanshika"
 date: "2024-10-03"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 # Part 1: Importing files, data wrangling, mathematical operations, plots and saving code on GitHub.
@@ -31,6 +31,11 @@ library(dplyr)
 library(ggplot2)
 library(readr)
 library(tidyr)
+library(knitr)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.width=7, fig.height=5, out.width="80%")
 ```
 
 2) Read in the gene expression data
@@ -111,7 +116,7 @@ ggsave("histogram_mean_low_gene_expression.png")
 
 Read Data to perform a Tree Circumference Data Analysis
 
-```{r}
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
 # Read in the growth data
 #Download the data from the github link provided
 URL = "https://raw.githubusercontent.com/ghazkha/Assessment4/refs/heads/main/growth_data.csv"
@@ -121,7 +126,9 @@ download.file(URL, destfile = "growth_data.csv")
 growth_data <- read.csv("growth_data.csv")
 
 head(growth_data)
+```
 
+```{r, echo=FALSE}
 # Show column names
 cat("The column names are:", colnames(growth_data))
 ```
@@ -151,7 +158,7 @@ print(summary_stats)
 
 Boxplot of circumferences
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # Reshape data from wide to long format for Circumf_2005_cm and Circumf_2020_cm
 long_data <- growth_data %>%
   select(Site, TreeID, Circumf_2005_cm, Circumf_2020_cm) %>%

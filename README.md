@@ -60,6 +60,13 @@ library(tidyr)
 ```
 Purpose: Focuses on tidying data, ensuring datasets are in a structured format suitable for analysis. It includes functions for reshaping and organizing data frames, enhancing the clarity of data preparation steps (Wickham and Henry, 2020).
 
+#### 8) knitr:
+
+```r
+library(knitr)
+```
+Purpose: Allows dynamic report generation, allowing users to integrate R code with text to create high-quality documents in various formats like HTML, PDF, and Word.
+
 #### Inputs:
 
 Sequence Files: FASTA or other formats containing DNA or protein sequences.
@@ -70,6 +77,13 @@ Data Parameters: Configurable settings for analysis, such as k-mer lengths, freq
 Frequency Tables: Data frames summarizing the counts or proportions of codons or k-mers.
 Visualizations: Plots generated using ggplot2, showcasing the distribution of codon usage or other metrics.
 Cleaned Data Frames: Manipulated datasets ready for further analysis or export.
+
+### Images format
+
+```r
+knitr::opts_chunk$set(fig.width=7, fig.height=5, out.width="80%")
+```
+Purpose: this code sets global options for all subsequent R code chunks in the document.
 
 ## Part 1. Task 1
 
