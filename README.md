@@ -466,5 +466,394 @@ Mean_Length: The mean coding sequence length for each organism.
 
 Median_Length: The median coding sequence length for each organism.
 
+### Frequency of DNA Bases
 
+The frecuency of DNA bases in the coding sequences of *Escherichia coli* and *Streptacidiphilus jiangxiensis*, is calculated and visualized using the following code.
+
+```r
+dna_ecoli <- unlist(ecoli_seqs)
+ecoli_dna_df <- data.frame(base = dna_ecoli) 
+ecoli_dna_composition <- ecoli_dna_df %>% count(base)  
+
+dna_streptacidiphilus <- unlist(streptacidiphilus_seqs)
+streptacidiphilus_dna_df <- data.frame(base = dna_streptacidiphilus)
+streptacidiphilus_dna_composition <- streptacidiphilus_dna_df %>% count(base)
+
+barplot(height=ecoli_dna_composition$n,
+        names.arg=ecoli_dna_composition$base,
+        col = "lightgreen",
+        xlab="nucleotides",
+        ylab="frequency", 
+        main="E. coli CDS composition")
+grid()
+barplot(height=streptacidiphilus_dna_composition$n,
+        names.arg = streptacidiphilus_dna_composition$base,
+        col="lightblue",
+        xlab="nucleotides",
+        ylab="frequency", 
+        main="S. jiangxiensis CDS composition")
+grid()
+
+```
+
+#### Inputs:
+ecoli_seqs: A list of coding DNA sequences for *Escherichia coli*.
+
+streptacidiphilus_seqs: A list of coding DNA sequences for *Streptacidiphilus jiangxiensis*.
+
+#### Outputs:
+ecoli_dna_composition: A vector containing the frequency of each nucleotide in *Escherichia coli* coding sequences.
+
+streptacidiphilus_dna_composition: A vector containing the frequency of each nucleotide in *Streptacidiphilus jiangxiensis* coding sequences.
+
+Bar Plots: Visual representations of nucleotide frequencies for both organisms, labeled appropriately.
+
+### Amino Acid Frequency
+
+The purpose of this code is to convert coding DNA sequences into protein sequences and then calculate and visualize the frequency of amino acids in *Escherichia coli* and *Streptacidiphilus jiangxiensis*.
+
+```r
+ecoli_seqs <- seqinr::read.fasta ("e_coli_cds.fa")
+streptacidiphilus_seqs <- seqinr::read.fasta ("streptacidiphilus_cds.fa")
+
+ecoli_prot <- lapply(ecoli_seqs, translate)
+streptacidiphilus_prot <- lapply(streptacidiphilus_seqs, translate)
+
+ecoli_proteins <- unlist(ecoli_prot)
+streptacidiphilus_proteins <-unlist(streptacidiphilus_prot)
+
+aa_ecoli <-unique(ecoli_proteins)
+aa_ecoli <- aa_ecoli[aa_ecoli != "*"]
+aa_streptacidiphilus <- unique(streptacidiphilus_proteins)
+aa_streptacidiphilus <- aa_streptacidiphilus[aa_streptacidiphilus != "*"]
+
+ecoli_proteins_df <- data.frame(aa = ecoli_proteins, stringsAsFactors = FALSE)
+streptacidiphilus_proteins_df <- data.frame(aa = streptacidiphilus_proteins, stringsAsFactors = FALSE)
+
+ecoli_aa_freq <- ecoli_proteins_df %>%
+  count(aa)
+
+streptacidiphilus_aa_freq <- streptacidiphilus_proteins_df %>%
+  count(aa)
+
+barplot(height=ecoli_aa_freq$n,
+        names.arg = ecoli_aa_freq$aa,
+        col = "lightgreen",
+        xlab="Aminoacids",
+        ylab="Frequency", 
+        main="Amino Acid Frequency in Escherichia coli")
+grid()
+barplot(height=streptacidiphilus_aa_freq$n, 
+        names.arg = streptacidiphilus_aa_freq$aa,
+        col="lightblue",
+        xlab="Aminoacids",
+        ylab="Frequency", 
+        main="Amino Acid Frequency in Streptacidiphilus jiangxiensis")
+grid()
+```
+
+#### Inputs:
+ecoli_seqs: A list of coding DNA sequences for *Escherichia coli*.
+
+streptacidiphilus_seqs: A list of coding DNA sequences for *Streptacidiphilus jiangxiensis*.
+
+#### Outputs:
+ecoli_aa_freq: A vector containing the frequency of each amino acid in *Escherichia coli* protein sequences.
+
+streptacidiphilus_aa_freq: A vector containing the frequency of each amino acid in *Streptacidiphilus jiangxiensis* protein sequences.
+
+Bar Plots: Visual representations of amino acid frequencies for both organisms, labeled appropriately.
+
+### Codon Usage Bias
+
+This code calculates and visualizes the codon usage bias in *Escherichia coli* and *Streptacidiphilus jiangxiensis* by creating relative synonymous codon usage (RSCU) tables and generating bar plots for comparison.
+
+```r
+
+RSCU_ecoli <- uco(dna_ecoli,index="rscu",as.data.frame=TRUE)
+RSCU_streptacidiphilus <- uco(dna_streptacidiphilus,index="rscu",as.data.frame=TRUE)
+
+RSCU_combined <- cbind(RSCU_ecoli, "S. jiangxiensis RSCU"=RSCU_streptacidiphilus$RSCU)
+colnames(RSCU_combined)[5] <- "E. coli RSCU"
+View(RSCU_combined)
+
+barplot(height=RSCU_ecoli$RSCU, 
+        names.arg=RSCU_ecoli$codon,
+        col = "lightgreen",
+        xlab= "Codons",
+        ylab="Relative Synonymous Codon Usage",
+        main="Codon Usage Bias in Escherichia coli",
+        las = 2,  # Rotate labels
+        space = 0.5,  # Reduce space between bars
+        width = 0.4,
+        ylim = c(0, 4))
+grid()
+ 
+barplot(height=RSCU_streptacidiphilus$RSCU, 
+        names.arg=RSCU_streptacidiphilus$codon,
+        col = "lightblue",
+        xlab= "Codons",
+        ylab="Relative Synonymous Codon Usage", 
+        main="Codon Usage in Streptacidiphilus jiangxiensis",
+        las = 2,  # Rotate labels
+        space = 0.5,  # Reduce space between bars
+        width = 0.4,
+        ylim = c(0, 4))
+grid()
+```
+
+### Inputs:
+dna_ecoli: A vector of coding DNA sequences for *Escherichia coli*.
+
+dna_streptacidiphilus: A vector of coding DNA sequences for *Streptacidiphilus jiangxiensis*.
+
+### Outputs:
+RSCU_ecoli: A data frame containing the codon usage data for *Escherichia coli*.
+
+RSCU_streptacidiphilus: A data frame containing the codon usage data for *Streptacidiphilus jiangxiensis*.
+
+RSCU_combined: A combined table of RSCU values for both organisms.
+
+Bar Plots: Visual representations of codon usage bias for both *Escherichia coli* and *Streptacidiphilus jiangxiensis*, labeled appropriately.
+
+### Overlay the two barplots to compare the RSCU between the two organisms.
+
+The purpose of this code is to create an overlaid bar plot to visually compare the relative synonymous codon usage (RSCU) between *Escherichia coli* and *Streptacidiphilus jiangxiensis*.
+
+```r
+
+bar_heights_ecoli <- barplot(height = RSCU_ecoli$RSCU, 
+                              names.arg = RSCU_ecoli$codon,
+                              col = rgb(0, 1, 0, 0.5),  # Transparent green
+                              xlab = "Codons",
+                              ylab = "Relative Synonymous Codon Usage",
+                              main = "Codon Usage Bias",
+                              las = 2,  # Rotate labels
+                              space = 0.5,  # Reduce space between bars
+                              width = 0.4,
+                              ylim = c(0, 3.8))  # Set proper limits for y-axis
+
+
+bar_heights_streptacidiphilus <- barplot(height = RSCU_streptacidiphilus$RSCU, 
+                                          col = rgb(0, 0, 1, 0.5),  # Transparent blue
+                                          add = TRUE,  # Overlay on the existing plot
+                                          las = 2,  # Rotate labels
+                                         space = 0.5,  # Same space for consistency
+                                          width = 0.4)
+
+
+legend("topright", 
+       legend = c("Escherichia coli", "Streptacidiphilus jiangxiensis"), 
+       fill = c(rgb(0, 1, 0, 0.5), rgb(0, 0, 1, 0.5)))
+
+grid()
+```
+
+#### Inputs:
+RSCU_ecoli: A data frame containing RSCU values for *Escherichia coli codons*.
+
+RSCU_streptacidiphilus: A data frame containing RSCU values for *Streptacidiphilus jiangxiensis* codons.
+
+#### Outputs:
+Overlaid Bar Plot: A single plot displaying the codon usage for both organisms with transparency to distinguish between the two datasets.
+
+Legend: A legend indicating which color corresponds to each organism.
+
+### K-mer Analysis
+
+The purpose of this code is to analyze the frequency of k-mers (3-mers, 4-mers, and 5-mers) in the protein sequences of *Escherichia coli* and *Streptacidiphilus jiangxiensis*, and to visualize the top and bottom k-mers for both organisms.
+
+```r
+
+ecoli_prot_freq_3 <- seqinr::count(ecoli_proteins, wordsize=3, alphabet=aa_ecoli,freq=TRUE)
+ecoli_prot_freq_3 <- as.data.frame (ecoli_prot_freq_3)
+colnames(ecoli_prot_freq_3)[1] <- "3-mer"
+
+streptacidiphilus_prot_freq_3 <- seqinr::count(streptacidiphilus_proteins, wordsize=3, alphabet=aa_streptacidiphilus,freq=TRUE)
+streptacidiphilus_prot_freq_3 <- as.data.frame(streptacidiphilus_prot_freq_3)
+colnames(streptacidiphilus_prot_freq_3)[1] <- "3-mer"
+
+ecoli_prot_freq_4 <- seqinr::count(ecoli_proteins, wordsize=4, alphabet=aa_ecoli, freq=TRUE)
+ecoli_prot_freq_4 <- as.data.frame (ecoli_prot_freq_4)
+colnames(ecoli_prot_freq_4)[1] <- "4-mer"
+
+streptacidiphilus_prot_freq_4 <- seqinr::count(streptacidiphilus_proteins, wordsize=4, alphabet=aa_streptacidiphilus,freq=TRUE)
+streptacidiphilus_prot_freq_4 <- as.data.frame(streptacidiphilus_prot_freq_4)
+colnames(streptacidiphilus_prot_freq_4)[1] <- "4-mer"
+
+ecoli_prot_freq_5 <- seqinr::count(ecoli_proteins, wordsize=5, alphabet=aa_ecoli, freq=TRUE)
+ecoli_prot_freq_5 <- as.data.frame (ecoli_prot_freq_5)
+colnames(ecoli_prot_freq_5)[1] <- "5-mer"
+
+streptacidiphilus_prot_freq_5 <- seqinr::count(streptacidiphilus_proteins, wordsize=5, alphabet=aa_streptacidiphilus,freq=TRUE)
+streptacidiphilus_prot_freq_5 <- as.data.frame(streptacidiphilus_prot_freq_5)
+colnames(streptacidiphilus_prot_freq_5)[1] <- "5-mer"
+
+
+ecoli_kmers <- data.frame(
+  Kmer = c(
+    as.character(ecoli_prot_freq_3$`3-mer`),
+    as.character(ecoli_prot_freq_4$`4-mer`),
+    as.character(ecoli_prot_freq_5$`5-mer`)
+  ),
+  Frequency = c(
+    as.numeric(ecoli_prot_freq_3$Freq),
+    as.numeric(ecoli_prot_freq_4$Freq),
+    as.numeric(ecoli_prot_freq_5$Freq)
+  )
+)
+
+ecoli_kmers <- ecoli_kmers[order(ecoli_kmers$Frequency, decreasing = TRUE), ]
+
+ecoli_kmers_filtered <- ecoli_kmers[ecoli_kmers$Frequency > 0, ]
+
+ecoli_top_10 <- ecoli_kmers_filtered[order(ecoli_kmers_filtered$Frequency, decreasing = TRUE), ][1:10, ]
+View(ecoli_top_10)
+
+ecoli_bottom_10 <- ecoli_kmers_filtered[order(ecoli_kmers_filtered$Frequency), ][1:10, ]
+View(ecoli_bottom_10)
+
+ecoli_kmers_null <- ecoli_kmers[ecoli_kmers$Frequency == 0, ]
+ecoli_num_kmers_null <- nrow(ecoli_kmers_null)
+cat("Number of E. coli K-mers with 0 frequency:", ecoli_num_kmers_null, "\n")
+
+streptacidiphilus_kmers <- data.frame(
+  Kmer = c(
+    as.character(streptacidiphilus_prot_freq_3$`3-mer`),
+    as.character(streptacidiphilus_prot_freq_4$`4-mer`),
+    as.character(streptacidiphilus_prot_freq_5$`5-mer`)
+  ),
+  Frequency = c(
+    as.numeric(streptacidiphilus_prot_freq_3$Freq),
+    as.numeric(streptacidiphilus_prot_freq_4$Freq),
+    as.numeric(streptacidiphilus_prot_freq_5$Freq)
+  )
+)
+
+streptacidiphilus_kmers <- streptacidiphilus_kmers[order(streptacidiphilus_kmers$Frequency, decreasing = TRUE), ]
+
+streptacidiphilus_kmers_filtered <- streptacidiphilus_kmers[streptacidiphilus_kmers$Frequency > 0, ]
+
+streptacidiphilus_top_10 <- streptacidiphilus_kmers_filtered[order(streptacidiphilus_kmers_filtered$Frequency, decreasing = TRUE), ][1:10, ]
+View(streptacidiphilus_top_10)
+
+streptacidiphilus_bottom_10 <- streptacidiphilus_kmers_filtered[order(streptacidiphilus_kmers_filtered$Frequency), ][1:10, ]
+View(streptacidiphilus_bottom_10)
+
+streptacidiphilus_kmers_null <- streptacidiphilus_kmers[streptacidiphilus_kmers$Frequency == 0, ]
+streptacidiphilus_num_kmers_null <- nrow(streptacidiphilus_kmers_null)
+cat("Number of S. jiangxiensis K-mers with 0 frequency:", streptacidiphilus_num_kmers_null, "\n")
+
+barplot(height=ecoli_top_10$Frequency, 
+        names.arg=ecoli_top_10$Kmer,
+        col = "lightgreen",
+        xlab= "K-mers",
+        ylab="Frequency",
+        main="Top 10 E.coli K-mers",
+        las = 2,  # Rotate labels
+        space = 0.5,  
+        width = 0.4,
+        ylim = c(0, 0.002))
+grid()
+
+barplot(height=streptacidiphilus_top_10$Frequency, 
+        names.arg=streptacidiphilus_top_10$Kmer,
+        col = "lightblue",
+        xlab= "K-mers",
+        ylab="Frequency",
+        main="Top 10 S.jiangxiensis K-mers",
+        las = 2,  # Rotate labels
+        space = 0.5,  
+        width = 0.4,
+        ylim = c(0, 0.005))
+grid()
+
+barplot(height=ecoli_bottom_10$Frequency, 
+        names.arg=ecoli_bottom_10$Kmer,
+        col = "lightgreen",
+        xlab= "K-mers",
+        ylab="Frequency",
+        main="Bottom 10 E.coli K-mers",
+        las = 2,  # Rotate labels
+        space = 0.5,  
+        width = 0.4,
+       )
+grid()
+
+barplot(height=streptacidiphilus_bottom_10$Frequency, 
+        names.arg=streptacidiphilus_bottom_10$Kmer,
+        col = "lightblue",
+        xlab= "K-mers",
+        ylab="Frequency",
+        main="Bottom 10 S.jiangxiensis K-mers",
+        las = 2,  # Rotate labels
+        space = 0.5,  
+        width = 0.4,
+        )
+grid()
+
+```
+
+#### Inputs:
+Protein sequences for both organisms (loaded from previous analyses).
+
+Amino acid alphabets for both organisms.
+
+#### Outputs:
+Data frames containing the frequency of 3-mers, 4-mers, and 5-mers for each organism.
+
+Tables of the top 10 and bottom 10 most and least frequent k-mers for each organism.
+
+Counts of k-mers with zero frequency for both organisms.
+
+Bar plots visualizing the top 10 and bottom 10 k-mers for each organism, showing their frequencies.
+
+### Session Info
+
+```r
+sessionInfo()
+```
+
+give a comprehensive overview of the working R environment. This is particularly helpful for:
+
+-Debugging and reproducibility.
+-Sharing your session details with others when reporting issues.
+-Keeping track of package versions and R settings.
+
+#### Outputs
+R Version: The version of R that is currently running.
+
+Platform: Information about the operating system (e.g., Windows, macOS, Linux).
+
+Locale: The current locale settings, which affect how R handles text encoding and date formats.
+
+Attached Base Packages: A list of base R packages that are loaded by default.
+
+Other Loaded Packages: A list of any additional packages that have been loaded during the session, along with their versions.
+
+## Conclusion
+
+In this assignment, we explored various aspects of gene expression and biological sequence diversity. Initially, we analyzed RNA-seq count data from the file "gene_expression.tsv," calculating the mean expression for each gene and identifying the top 10 genes with the highest mean values, along with determining how many genes had a mean expression below 10. The histogram of mean expression values provided a visual representation of the distribution, highlighting patterns in gene activity across the samples.
+
+Next, we examined tree growth data from "growth_data.csv," comparing tree circumference measurements taken at a control site and a treatment site over a 20-year period. We calculated the mean and standard deviation of tree circumference at both the start and end of the study, visualized the data through box plots, and assessed growth over the last decade using t-tests to evaluate significant differences between the sites.
+
+Part 2 of the assignment focused on comparing the sequence features of *Streptacidiphilus jiangxiensis* to *E. coli*. We downloaded and analyzed coding DNA sequences, tabulating the number of coding sequences and their total length, and identified differences in coding sequence lengths between the organisms. We also calculated the frequency of DNA bases and amino acids, generating bar plots to illustrate these frequencies. Codon usage bias was quantified and compared, providing insights into the evolutionary strategies of the two organisms. Finally, we identified and compared k-mers, revealing significant differences in sequence representation between the two genomes.
+
+Through this comprehensive analysis, we not only gained a deeper understanding of gene expression and tree growth patterns but also explored the genetic diversity and evolutionary implications of coding sequences in two distinct bacterial species. This integrative approach highlighted the importance of bioinformatics in elucidating the complexities of biological systems.
+
+## References:
+
+BENGTSSON, H. 2023. Various Programming Utilities [R package R. utils version 2.12. 3].
+
+CHARIF, D. & LOBRY, J. R. 2007. SeqinR 1.0-2: a contributed package to the R project for statistical computing devoted to biological sequences retrieval and analysis. Structural approaches to sequence evolution: Molecules, networks, populations. Springer.
+
+PAGÈS, H., ABOYOUN, P., GENTLEMAN, R. & DEBROY, S. 2023. Biostrings: efficient manipulation of biological strings. Biostrings, R package version 2.70. 1.
+
+WICKHAM, H., FRANÇOIS, R., HENRY, L., MÜLLER, K. & VAUGHAN, D. 2023. dplyr: a grammar of data manipulation. R package version 1.1. 2. Computer software.
+
+WICKHAM, H. & HENRY, L. 2020. tidyr: Tidy Messy Data. R package version 1.1. 2. CRAN. R-project. org/package= tidyr.
+
+WICKHAM, H., HESTER, J. & FRANCOIS, R. 2018. Readr: Read rectangular text data.
+
+WICKHAM, H. & WICKHAM, H. 2016. Data analysis, Springer.
 
