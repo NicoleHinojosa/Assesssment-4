@@ -322,4 +322,97 @@ t_test_result: An object containing the results of the t-test, including the t-s
 
 Console Output: The t-test results are printed to the console, providing insights into whether there is a statistically significant difference in growth between the sites.
 
+## Part 2: Examining Biological Sequence Diversity of *Streptacidiphilus jiangxiensis* and comparing it with *Escherichia Coli*
+
+In this task, we aim to analyze and compare the sequence features of *Streptacidiphilus jiangxiensis* with those of *Escherichia coli*. We will begin by downloading and examining the coding DNA sequences of both organisms to determine the number of coding sequences and their total length, presenting our findings in tables. We will also analyze the length of coding sequences using boxplots and calculate the mean and median lengths for each organism. Further, we will assess the frequency of DNA bases and amino acids, visualizing these frequencies through bar plots. Additionally, we will create a codon usage table to quantify codon usage bias and identify k-mers in the protein sequences, comparing their representation between the two organisms. Through this comprehensive analysis, we will highlight the differences in sequence features, providing insights into the evolutionary and functional implications of these variations.
+
+
+### Sequences
+
+This code is used to download and read the coding DNA sequences for *Escherichia coli* and Streptacidiphilus jiangxiensis from specified URLs, decompress the files, and load the sequences into R for further analysis.
+
+```r
+URL_Ecoli <- "https://ftp.ensemblgenomes.ebi.ac.uk/pub/bacteria/release-59/fasta/bacteria_117_collection/escherichia_coli_110957_gca_000485615/cds/Escherichia_coli_110957_gca_000485615.ASM48561v1.cds.all.fa.gz"
+URL_Streptacidiphilus <- "https://ftp.ensemblgenomes.ebi.ac.uk/pub/bacteria/release-59/fasta/bacteria_57_collection/streptacidiphilus_jiangxiensis_gca_900109465/cds/Streptacidiphilus_jiangxiensis_gca_900109465.IMG-taxon_2675903135_annotated_assembly.cds.all.fa.gz"
+
+download.file(URL_Ecoli, destfile = "e_coli_cds.fa.gz")
+download.file(URL_Streptacidiphilus, destfile = "streptacidiphilus_cds.fa.gz")
+
+gunzip("e_coli_cds.fa.gz")
+gunzip("streptacidiphilus_cds.fa.gz")
+
+ecoli_seqs <- seqinr::read.fasta ("e_coli_cds.fa")
+streptacidiphilus_seqs <- seqinr::read.fasta ("streptacidiphilus_cds.fa")
+```
+
+####: Inputs
+URL_Ecoli: URL for the *Escherichia coli* coding sequences (FASTA format, gzipped).
+
+URL_Streptacidiphilus: URL for the *Streptacidiphilus jiangxiensis* coding sequences (FASTA format, gzipped).
+
+#### Outputs:
+ecoli_seqs: A list of coding DNA sequences for *Escherichia coli*.
+
+streptacidiphilus_seqs: A list of coding DNA sequences for *Streptacidiphilus jiangxiensis*.
+
+Decompressed files: e_coli_cds.fa and streptacidiphilus_cds.fa in the working directory.
+
+### CDS count for both organisms
+
+The purpose of this code is to count the number of coding sequences in the *Escherichia coli* and *Streptacidiphilus jiangxiensis* datasets and create a summary table of these counts.
+
+```r
+
+ecoli_count <- length (ecoli_seqs)
+streptacidiphilus_count <- length (streptacidiphilus_seqs)
+
+
+coding_counts <- data.frame(
+  Organism = c("Escherichia coli", "Streptacidiphilus jiangxiensis"),
+  Coding_Sequences = c(ecoli_count, streptacidiphilus_count)
+)
+
+coding_counts
+```
+
+#### Inputs:
+ecoli_seqs: A list of coding DNA sequences for *Escherichia coli*.
+
+streptacidiphilus_seqs: A list of coding DNA sequences for *Streptacidiphilus jiangxiensis*.
+
+#### Outputs:
+ecoli_count: The total number of coding sequences in *Escherichia coli*.
+
+streptacidiphilus_count: The total number of coding sequences in *Streptacidiphilus jiangxiensis*.
+
+coding_counts: A data frame summarizing the counts of coding sequences for both organisms.
+
+### Total Coding DNA Length of both organisms
+
+The code below calculates the total length of coding DNA sequences for *Escherichia coli* and *Streptacidiphilus jiangxiensis*, and to create a summary table displaying these lengths.
+
+```r
+
+ecoli_length <- as.numeric(summary(ecoli_seqs)[,1])
+streptacidiphilus_length <- as.numeric(summary(streptacidiphilus_seqs)[,1])
+
+total_lengths <- data.frame(
+  Organism = c("Escherichia coli", "Streptacidiphilus jiangxiensis"),
+  Total_Length = c(sum(ecoli_length), sum(streptacidiphilus_length))
+)
+
+total_lengths
+```
+
+#### Inputs:
+ecoli_seqs: A list of coding DNA sequences for *Escherichia coli*.
+
+streptacidiphilus_seqs: A list of coding DNA sequences for *Streptacidiphilus jiangxiensis*.
+
+#### Outputs:
+ecoli_length: A numeric vector containing the lengths of coding sequences for *Escherichia coli*.
+
+streptacidiphilus_length: A numeric vector containing the lengths of coding sequences for *Streptacidiphilus jiangxiensis*.
+
+total_lengths: A data frame summarizing the total coding DNA lengths for both organisms.
 
