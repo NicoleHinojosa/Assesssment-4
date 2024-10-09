@@ -14,11 +14,14 @@ output:
 
 This report analyzes RNA-seq count data for gene expression and tree circumference measurements at two different sites over a 20-year period. 
 
-## Task 1: RNA-seq count data for gene expression, high and low expression of 3 genes.
+## Task 1: RNA-seq count data for gene expression, high and low expression of 3 genes.\\
 
-### 1.1 Read in the file “gene_expression.tsv”, making the gene identifiers the row names. Show a table of values for the first six genes.
+
+### 1.1 Read in the file “gene_expression.tsv”, making the gene identifiers the row names. Show a table of values for the first six genes.\\
+
 
 1) Load libraries
+
 
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 #RNA-seq Count Data Analysis
@@ -37,6 +40,7 @@ library(knitr)
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(fig.width=7, fig.height=5, out.width="80%")
 ```
+\\
 
 2) Read in the gene expression data
 
@@ -48,6 +52,7 @@ download.file(URL, destfile = "gene_expression.tsv")
 # Read the downloaded TSV file into R
 gene_expression <- read.table("gene_expression.tsv", header = TRUE, sep = "\t", row.names = 1)
 ```
+\\
 
 3) 1st First 6 rows of the gene_expression data
 
@@ -56,7 +61,8 @@ gene_expression <- read.table("gene_expression.tsv", header = TRUE, sep = "\t", 
 head(n=6, gene_expression)
 ```
 
-### 1.2 Make a new column which is the mean of the other columns. Show a table of values for the first six genes.
+### 1.2 Make a new column which is the mean of the other columns. Show a table of values for the first six genes.\\
+
 
 Calculate Mean Expression
 
@@ -68,7 +74,8 @@ gene_expression <- gene_expression %>%
 head(n=6, gene_expression)
 ```
 
-### 1.3 List the 10 genes with the highest mean expression.
+### 1.3 List the 10 genes with the highest mean expression.\\
+
 
 Identify Top 10 Genes
 
@@ -81,7 +88,8 @@ top_genes <- gene_expression %>%
 (top_genes)
 ```
 
-### 1.4 Determine the number of genes with a mean <10.
+### 1.4 Determine the number of genes with a mean <10.\\
+
 
 Count Genes with Low Expression (Mean < 10)
 
@@ -93,7 +101,8 @@ num_genes_below_10 <- sum(gene_expression$mean_expression < 10)
 print(num_genes_below_10)
 ```
 
-### 1.5 Make a histogram plot of the mean values and include it into your report.
+### 1.5 Make a histogram plot of the mean values and include it into your report.\\
+
 
 Histogram of <10, Mean Values
 
@@ -110,9 +119,11 @@ ggplot(filtered_data, aes(x = mean_expression)) +
 ggsave("histogram_mean_low_gene_expression.png")
 ```
 
-## Task 2: Tree circumference measurements over 20 years.
+## Task 2: Tree circumference measurements over 20 years.\\
 
-### 2.1 Import “growth_data.csv” file into an R object. What are the column names?
+
+### 2.1 Import “growth_data.csv” file into an R object. What are the column names?\\
+
 
 Read Data to perform a Tree Circumference Data Analysis
 
@@ -133,7 +144,8 @@ head(growth_data)
 cat("The column names are:", colnames(growth_data))
 ```
 
-### 2.2 Calculate the mean and standard deviation of tree circumference at the start and end of the study at both sites.
+### 2.2 Calculate the mean and standard deviation of tree circumference at the start and end of the study at both sites.\\
+
 
 Statistics
 
@@ -154,7 +166,8 @@ summary_stats <- growth_data %>%
 print(summary_stats)
 ```
 
-### 2.3 Make a box plot of tree circumference at the start and end of the study at both sites.
+### 2.3 Make a box plot of tree circumference at the start and end of the study at both sites.\\
+
 
 Boxplot of circumferences
 
@@ -183,7 +196,8 @@ ggplot(long_data, aes(x = Year, y = Circumference, fill = Site)) +
 ggsave("boxplot_tree_circumference.png")
 ```
 
-### 2.4 Calculate the mean growth over the last 10 years at each site.
+### 2.4 Calculate the mean growth over the last 10 years at each site.\\
+
 
 Mean Growth Calculation
 
@@ -201,7 +215,8 @@ mean_growth <- growth_data %>%
 print(mean_growth)
 ```
 
-### 2.5 Use the t.test to estimate the p-value that the 10 year growth is different at the two sites.
+### 2.5 Use the t.test to estimate the p-value that the 10 year growth is different at the two sites.\\
+
 
 T-Test for Growth Difference
 
@@ -219,18 +234,24 @@ p-value: The p-value of 0.06229 suggests that the difference in mean growth betw
 
 Mean Comparison: The mean growth in the northeast (42.94 cm) is higher than that in the southwest (35.49 cm). This suggests that trees in the northeast experienced greater growth compared to those in the southwest over the last 10 years.
 
-Confidence Interval: The confidence interval includes zero, which means we cannot conclusively say that there is a true difference in growth between the two sites. The upper limit (15.29 cm) indicates that, while the northeast shows higher growth, it is possible that the actual difference might be minimal or even negative.
+Confidence Interval: The confidence interval includes zero, which means we cannot conclusively say that there is a true difference in growth between the two sites. The upper limit (15.29 cm) indicates that, while the northeast shows higher growth, it is possible that the actual difference might be minimal or even negative.\\
 
-# Part 2: Examining biological sequence diversity
+
+
+# Part 2: Examining biological sequence diversity\\
+
 
 ## Introduction
 
 This report compares the sequence features of *Streptacidiphilus jiangxiensis* (GCA_900109465) with *Escherichia coli*.
 *Escherichia coli* is a Gram-negative, rod-shaped bacterium commonly found in the intestines of warm-blooded organisms, playing a vital role in gut health. While some strains of *Escherichia coli* can cause illnesses, the bacterium is extensively used as a model organism in molecular biology due to its relatively simple genome and well-studied genetics. In contrast, *Streptacidiphilus jiangxiensis* is a Gram-positive bacterium isolated from acidic environments (Huang et al., 2004). This species is characterized by its unique metabolic pathways and adaptations to specific ecological niches, which may hold potential for applications in bioremediation or antibiotic development.
+\\
 
-## Questions:
+## Questions:\\
 
-### 1) Download the whole set of coding DNA sequences for E. coli and your organism of interest. How many coding sequences are present in these organisms? Present this in the form of a table. Describe any differences between the two organisms. 
+
+### 1) Download the whole set of coding DNA sequences for E. coli and your organism of interest. How many coding sequences are present in these organisms? Present this in the form of a table. Describe any differences between the two organisms. \\
+
 
 Sequences
 
@@ -276,9 +297,11 @@ coding_counts
 
 The expanded repertoire of genes in *Streptacidiphilus  jiangxiensis* likely contributes to its metabolic versatility, enabling it to thrive in diverse environments. This versatility allows *Streptacidiphilus  jiangxiensis* to exploit various substrates, potentially including organic compounds found in soil or plant matter, that *Escherichia coli* might not utilize as efficiently. For example, *Streptacidiphilus  jiangxiensis* may possess unique enzymes or metabolic pathways that allow it to break down complex carbohydrates, synthesize essential nutrients, or produce secondary metabolites, such as antimicrobial compounds, which can offer competitive advantages in its ecological niche (Wright, 1990).
 
-Moreover, the increased number of coding sequences may also reflect evolutionary adaptations to environmental pressures. In soil ecosystems, where nutrient availability can fluctuate, the ability to produce a wide range of enzymes and metabolites could enhance survival and reproduction (Harman and Uphoff, 2019). *Streptacidiphilus  jiangxiensis* may engage in symbiotic relationships with plants or other soil microorganisms, leveraging its genetic diversity to facilitate nutrient exchange or improve soil health (Cong et al., 2021). In contrast, *Escherichia coli*, while highly adaptable and successful in its own right, is often more specialized for life in nutrient-rich environments, such as the gastrointestinal tract of mammals. Thus, the greater coding sequence count in *Streptacidiphilus  jiangxiensis* underscores its potential for metabolic innovation and ecological resilience, reflecting a sophisticated evolutionary response to its environment (Wright, 1990; Malik et al., 2020).
+Moreover, the increased number of coding sequences may also reflect evolutionary adaptations to environmental pressures. In soil ecosystems, where nutrient availability can fluctuate, the ability to produce a wide range of enzymes and metabolites could enhance survival and reproduction (Harman and Uphoff, 2019). *Streptacidiphilus  jiangxiensis* may engage in symbiotic relationships with plants or other soil microorganisms, leveraging its genetic diversity to facilitate nutrient exchange or improve soil health (Cong et al., 2021). In contrast, *Escherichia coli*, while highly adaptable and successful in its own right, is often more specialized for life in nutrient-rich environments, such as the gastrointestinal tract of mammals. Thus, the greater coding sequence count in *Streptacidiphilus  jiangxiensis* underscores its potential for metabolic innovation and ecological resilience, reflecting a sophisticated evolutionary response to its environment (Wright, 1990; Malik et al., 2020).\\
 
-### 2) How much coding DNA is there in total for these two organisms? Present this in the form of a table. Describe any differences between the two organisms.
+
+### 2) How much coding DNA is there in total for these two organisms? Present this in the form of a table. Describe any differences between the two organisms.\\
+
 
 Total Coding DNA Length
 
@@ -302,9 +325,11 @@ The genomic analysis reveals that *Escherichia coli* comprises approximately 4,5
 
 The expanded coding capacity of *Streptacidiphilus* likely equips it with the ability to thrive in complex and potentially harsh environmental conditions. For instance, the organism might possess genes that allow it to metabolize a wider range of substrates, adapt to changes in nutrient availability, or withstand environmental stresses, such as acidity or high salinity (Rasko et al., 2008). Such metabolic versatility could enable *Streptacidiphilus* to exploit ecological niches that are less accessible to simpler organisms like *E. coli*, which tends to thrive in nutrient-rich environments typical of the mammalian gut (Lozica et al., 2022).
 
-Furthermore, the increased genetic content in *Streptacidiphilus* may include genes responsible for specialized functions, such as biosynthesis of secondary metabolites, antibiotic resistance, or symbiotic interactions with other organisms (Jarocki et al., 2019). These attributes are particularly valuable for survival in competitive ecosystems where resource availability can be unpredictable. In essence, the larger coding DNA in *Streptacidiphilus jiangxiensis* reflects an evolutionary strategy that enhances its adaptability and functional repertoire, illustrating how genomic complexity can influence ecological success and resilience (Huang et al., 2004).
+Furthermore, the increased genetic content in *Streptacidiphilus* may include genes responsible for specialized functions, such as biosynthesis of secondary metabolites, antibiotic resistance, or symbiotic interactions with other organisms (Jarocki et al., 2019). These attributes are particularly valuable for survival in competitive ecosystems where resource availability can be unpredictable. In essence, the larger coding DNA in *Streptacidiphilus jiangxiensis* reflects an evolutionary strategy that enhances its adaptability and functional repertoire, illustrating how genomic complexity can influence ecological success and resilience (Huang et al., 2004).\\
 
-### 3) Calculate the length of all coding sequences in these two organisms. Make a boxplot of coding sequence length in these organisms. What is the mean and median coding sequence length of these two organisms? Describe any differences between the two organisms.
+
+### 3) Calculate the length of all coding sequences in these two organisms. Make a boxplot of coding sequence length in these organisms. What is the mean and median coding sequence length of these two organisms? Describe any differences between the two organisms.\\
+
 
 Coding Sequence Length Distribution
 ```{r, echo=FALSE}
@@ -335,9 +360,11 @@ mean_median
 
 The comparison of coding sequence lengths between *Escherichia coli* and *Streptacidiphilus jiangxiensis* reveals significant insights into their genomic architectures and evolutionary adaptations. *Escherichia coli*, with a mean coding sequence length of 931.55 bp and a median of 804 bp, is known for its streamlined genome, which is optimized for rapid growth and efficient protein production in the nutrient-rich environments of mammalian intestines (Koonin, 2009). This bacterium's genetic simplicity has made it a model organism for studying fundamental biological processes, allowing researchers to explore genetic functions and interactions in a relatively uncomplicated context (Lizana and Schwartz, 2024).
 
-In contrast, *Streptacidiphilus jiangxiensis* presents a longer mean coding sequence of 973.73 bp and a median of 843 bp, suggesting a more intricate gene structure. This complexity may be indicative of specialized adaptations to its unique ecological niche, which includes survival in acidic environments (Malik et al., 2020). Longer coding sequences can allow for the encoding of more extensive and functionally diverse proteins, potentially enabling the bacterium to exploit a broader range of substrates or cope with environmental stresses (Maharjan and Ferenci, 2014). The differences in coding sequence length may reflect distinct evolutionary pressures faced by these organisms, with *Escherichia coli* evolving for rapid proliferation and *Streptacidiphilus jiangxiensis* potentially developing complex metabolic pathways or interactions to thrive in less hospitable conditions (Wan et al., 2022). This variation underscores the diverse functional requirements and ecological strategies that shape the genomes of bacteria, highlighting how environmental factors influence genetic structure and complexity (Chan et al., 2018).
+In contrast, *Streptacidiphilus jiangxiensis* presents a longer mean coding sequence of 973.73 bp and a median of 843 bp, suggesting a more intricate gene structure. This complexity may be indicative of specialized adaptations to its unique ecological niche, which includes survival in acidic environments (Malik et al., 2020). Longer coding sequences can allow for the encoding of more extensive and functionally diverse proteins, potentially enabling the bacterium to exploit a broader range of substrates or cope with environmental stresses (Maharjan and Ferenci, 2014). The differences in coding sequence length may reflect distinct evolutionary pressures faced by these organisms, with *Escherichia coli* evolving for rapid proliferation and *Streptacidiphilus jiangxiensis* potentially developing complex metabolic pathways or interactions to thrive in less hospitable conditions (Wan et al., 2022). This variation underscores the diverse functional requirements and ecological strategies that shape the genomes of bacteria, highlighting how environmental factors influence genetic structure and complexity (Chan et al., 2018).\\
 
-### 4) Calculate the frequency of DNA bases in the total coding sequences for both organisms. Perform the same calculation for the total protein sequence. Create bar plots for nucleotide and amino acid frequency. Describe any differences between the two organisms.
+
+### 4) Calculate the frequency of DNA bases in the total coding sequences for both organisms. Perform the same calculation for the total protein sequence. Create bar plots for nucleotide and amino acid frequency. Describe any differences between the two organisms.\\
+
 
 Frequency of DNA Bases
 
@@ -440,10 +467,12 @@ The differences in amino acid frequency between *Escherichia coli* and *Streptac
 
 Conversely, *Streptacidiphilus jiangxiensis* shows a slightly different pattern, with alanine (A), leucine (L), glycine (G), valine (V), and arginine (R) as the five most frequent amino acids. The presence of arginine in this top five may indicate specific adaptations related to stress responses or metabolic processes unique to its ecological niche. The dominance of alanine, along with the other branched-chain amino acids, suggests that *Streptacidiphilus* might be optimized for particular biochemical pathways that enable it to thrive in potentially nutrient-poor or competitive environments (Koonin, 2009).
 
-These variations in amino acid frequencies not only reflect the distinct metabolic capabilities of each organism but also offer insights into how they might respond to environmental challenges. For instance, the higher frequency of arginine in *Streptacidiphilus* may confer advantages in environments requiring enhanced nitrogen metabolism or stress resilience (Chen et al., 2021). Thus, examining the amino acid composition provides a deeper understanding of the functional diversity and ecological adaptations of these two bacteria, shedding light on their evolutionary trajectories in different ecological contexts (Monteiro et al., 2023).
+These variations in amino acid frequencies not only reflect the distinct metabolic capabilities of each organism but also offer insights into how they might respond to environmental challenges. For instance, the higher frequency of arginine in *Streptacidiphilus* may confer advantages in environments requiring enhanced nitrogen metabolism or stress resilience (Chen et al., 2021). Thus, examining the amino acid composition provides a deeper understanding of the functional diversity and ecological adaptations of these two bacteria, shedding light on their evolutionary trajectories in different ecological contexts (Monteiro et al., 2023).\\
 
 
-### 5) Create a codon usage table and quantify the codon usage bias among all coding sequences. Describe any differences between the two organisms with respect to their codon usage bias. Provide charts to support your observations.
+
+### 5) Create a codon usage table and quantify the codon usage bias among all coding sequences. Describe any differences between the two organisms with respect to their codon usage bias. Provide charts to support your observations.\\
+
 
 Codon Usage Bias
 
@@ -528,10 +557,12 @@ grid()
 
 ##### Answer: 
 
-The comparison of codon usage bias between *Escherichia coli* and *Streptacidiphilus jiangxiensis* reveals intriguing insights into their evolutionary adaptations and functional capabilities. In *E. coli*, the Relative Synonymous Codon Usage (RSCU) is notably high for codons such as CTG, CGC, CGT, CCG, and TAA, indicating a preference for these codons in highly expressed genes (Stoletzki and Eyre-Walker, 2006). This pattern suggests that *E. coli* has evolved to optimize its translational efficiency and speed in its typical environments, which often include nutrient-rich conditions that favor rapid growth and division (Lipinszki et al., 2018). Conversely, *Streptacidiphilus jiangxiensis* exhibits a distinct codon usage bias with elevated RSCU values for CTG, CGC, ATC, ACC, and GGC. The presence of ATC and ACC among the preferred codons indicates a potential adaptation to a different ecological niche, possibly involving specialized metabolic functions or responses to varying environmental pressures. These differences in codon preference may reflect the organisms' evolutionary histories, metabolic versatility, and ecological roles (Tyagi et al., 2023), with *Streptacidiphilus* possibly relying on a broader array of substrates or exhibiting different growth strategies compared to the more straightforward, rapid proliferation of *E. coli*. Understanding these patterns can provide deeper insights into how these bacteria interact with their environments and adapt to the challenges they face (Chan et al., 2018).
+The comparison of codon usage bias between *Escherichia coli* and *Streptacidiphilus jiangxiensis* reveals intriguing insights into their evolutionary adaptations and functional capabilities. In *E. coli*, the Relative Synonymous Codon Usage (RSCU) is notably high for codons such as CTG, CGC, CGT, CCG, and TAA, indicating a preference for these codons in highly expressed genes (Stoletzki and Eyre-Walker, 2006). This pattern suggests that *E. coli* has evolved to optimize its translational efficiency and speed in its typical environments, which often include nutrient-rich conditions that favor rapid growth and division (Lipinszki et al., 2018). Conversely, *Streptacidiphilus jiangxiensis* exhibits a distinct codon usage bias with elevated RSCU values for CTG, CGC, ATC, ACC, and GGC. The presence of ATC and ACC among the preferred codons indicates a potential adaptation to a different ecological niche, possibly involving specialized metabolic functions or responses to varying environmental pressures. These differences in codon preference may reflect the organisms' evolutionary histories, metabolic versatility, and ecological roles (Tyagi et al., 2023), with *Streptacidiphilus* possibly relying on a broader array of substrates or exhibiting different growth strategies compared to the more straightforward, rapid proliferation of *E. coli*. Understanding these patterns can provide deeper insights into how these bacteria interact with their environments and adapt to the challenges they face (Chan et al., 2018).\\
 
 
-#### 6) In the organism of interest, identify 10 protein sequence k-mers of length 3-5 which are the most over- and under-represented k-mers in your organism of interest. Are these k-mers also over- and under-represented in E. coli to a similar extent? Provide plots to support your observations. Why do you think these sequences are present at different levels in the genomes of these organisms?
+
+#### 6) In the organism of interest, identify 10 protein sequence k-mers of length 3-5 which are the most over- and under-represented k-mers in your organism of interest. Are these k-mers also over- and under-represented in E. coli to a similar extent? Provide plots to support your observations. Why do you think these sequences are present at different levels in the genomes of these organisms?\\
+
 
 K-mer Analysis
 
@@ -717,7 +748,11 @@ In contrast, *Streptacidiphilus jiangxiensis* presents a different k-mer profile
 
 The contrasting least frequent k-mers further illuminate these differences. For example, *E. coli* contains k-mers like MWC and AACW, which may correspond to rare or less-utilized protein motifs, possibly limiting its capacity to produce certain proteins under specific environmental conditions. Meanwhile, *Streptacidiphilus* features k-mers such as CMK and FRX, which may represent unique adaptations or niche-specific proteins that enhance its survival in less competitive environments. The presence of such rare sequences could confer the ability to utilize specific substrates or produce bioactive compounds that aid in survival and competitive advantage in its soil habitat (Bussi et al., 2021).
 
-Overall, the differences in k-mer frequency between these two organisms reveal not only their distinct evolutionary paths but also their strategies for thriving in their respective environments. E. coli's k-mer composition supports rapid growth and adaptability in rich environments, while Streptacidiphilus’s diverse k-mer patterns likely enhance its metabolic versatility and ecological resilience in variable soil ecosystems.
+Overall, the differences in k-mer frequency between these two organisms reveal not only their distinct evolutionary paths but also their strategies for thriving in their respective environments. E. coli's k-mer composition supports rapid growth and adaptability in rich environments, while Streptacidiphilus’s diverse k-mer patterns likely enhance its metabolic versatility and ecological resilience in variable soil ecosystems.\\
+\\
+\\
+\\
+\\
 
 ## References
 
