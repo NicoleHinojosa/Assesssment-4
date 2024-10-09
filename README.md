@@ -124,7 +124,6 @@ The purpose of this code is to display the first six rows of the gene_expression
 ```r
 # View the first few rows of the data
 gene_expression_show <- head(n=6, gene_expression)
-gene_expression_show
 #Give format to the table
 kable (gene_expression_show, align = 'c', caption = "First 6 genes of gene_expression file")
 ```
@@ -354,9 +353,8 @@ mean_growth <- growth_data %>%
   group_by(Site) %>%
   summarise(mean_growth = mean(Growth_10_years, na.rm = TRUE), .groups = 'drop')
 
-# Print the mean growth
-cat("Mean growth:")
-print (mean_growth)
+# Show the mean growth
+kable(mean_growth, align='c')
 ```
 
 #### Inputs:
@@ -367,7 +365,7 @@ Updated growth_data: The original data frame augmented with a new column, Growth
 
 mean_growth: A data frame summarizing the mean growth for each site.
 
-Console Output: A printed statement showing the mean growth for each site, formatted as a table.
+Formatted Table: The mean growth data is displayed in a table format using kable(), providing a clear and organized view of the results.
 
 
 ### T-Test for Growth Difference
@@ -380,8 +378,8 @@ The t-test is a statistical method used to determine if there is a significant d
 t_test_result <- t.test(Growth_10_years ~ Site, data = growth_data)
 
 # Print t-test results
-cat("t-test results:")
-print (t_test_result)
+t_test_result
+
 ```
 
 #### Inputs:
@@ -889,7 +887,6 @@ streptacidiphilus_num_kmers_null <- nrow(streptacidiphilus_kmers_null)
 cat("Number of S. jiangxiensis K-mers with 0 frequency:")
 print (streptacidiphilus_num_kmers_null)
 
-
 #Plot of top 10 E.coli K-mers
 barplot(height=ecoli_top_10$Frequency, 
         names.arg=ecoli_top_10$Kmer,
@@ -900,7 +897,9 @@ barplot(height=ecoli_top_10$Frequency,
         las = 2,  # Rotate labels
         space = 0.5,  
         width = 0.4,
-        ylim = c(0, 0.002))
+        ylim = c(0, 0.002),
+        cex.axis = 0.6)
+
 grid()
 
 #Plot of top 10 S.jiangxiensis K-mers
@@ -913,7 +912,8 @@ barplot(height=streptacidiphilus_top_10$Frequency,
         las = 2,  # Rotate labels
         space = 0.5,  
         width = 0.4,
-        ylim = c(0, 0.005))
+        ylim = c(0, 0.005),
+        cex.axis = 0.6)
 grid()
 
 #Plot of bottom 10 E.coli K-mers
@@ -925,7 +925,8 @@ barplot(height=ecoli_bottom_10$Frequency,
         main="Bottom 10 E.coli K-mers",
         las = 2,  # Rotate labels
         space = 0.5,  
-        width = 0.4
+        width = 0.4,
+        cex.axis = 0.6
        )
 grid()
 
@@ -938,7 +939,8 @@ barplot(height=streptacidiphilus_bottom_10$Frequency,
         main="Bottom 10 S.jiangxiensis K-mers",
         las = 2,  # Rotate labels
         space = 0.5,  
-        width = 0.4
+        width = 0.4,
+        cex.axis = 0.6
         )
 grid()
 
