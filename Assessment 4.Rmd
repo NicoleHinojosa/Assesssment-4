@@ -214,8 +214,6 @@ ggplot(long_data, aes(x = Year, y = Circumference, fill = Site)) +
 
 
 
-Mean Growth Calculation
-
 ```{r, echo=FALSE}
 # Calculate growth over the last 10 years for each tree
 growth_data <- growth_data %>%
@@ -227,7 +225,7 @@ mean_growth <- growth_data %>%
   summarise(mean_growth = mean(Growth_10_years, na.rm = TRUE), .groups = 'drop')
 
 # Show the mean growth
-kable(mean_growth, align='c')
+kable(mean_growth, align='c', caption = "Mean Growth Calculation")
 ```
 
 ### 2.5 Use the t.test to estimate the p-value that the 10 year growth is different at the two sites.

@@ -354,7 +354,7 @@ mean_growth <- growth_data %>%
   summarise(mean_growth = mean(Growth_10_years, na.rm = TRUE), .groups = 'drop')
 
 # Show the mean growth
-kable(mean_growth, align='c')
+kable(mean_growth, align='c', caption = "Mean Growth Calculation")
 ```
 
 #### Inputs:
