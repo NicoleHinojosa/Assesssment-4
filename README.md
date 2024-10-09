@@ -89,6 +89,7 @@ Purpose: this code sets global options for all subsequent R code chunks in the d
 
 In this task, we aim to analyze gene expression data by reading a file containing gene identifiers and their expression values. We'll display the first six genes to understand the dataset, calculate the mean expression for each gene, identify the top 10 genes with the highest mean expression, count how many genes have a mean expression below 10, and visualize the distribution of low-expression genes using a histogram plot. This analysis will help us understand gene expression patterns and identify potential candidates for further investigation.
 
+
 ### Download data and read it
 
 The following code downloads a gene expression dataset from a specified GitHub repository and then reads that dataset into R as a data frame. This allows for further analysis and processing of the gene expression data in subsequent steps.
@@ -115,13 +116,17 @@ Data Frame: The code reads the downloaded TSV file into R and stores it in a var
 - Use the first column of the file as row names (row.names = 1).
 - Be structured with tab (\t) as the separator between values.
 
+
 ### Inspecting the data frame
 
 The purpose of this code is to display the first six rows of the gene_expression data frame. This allows users to quickly inspect the structure and content of the data, ensuring that it has been loaded correctly and giving an overview of the gene expression values.
 
 ```r
 # View the first few rows of the data
-head(n=6, gene_expression)
+gene_expression_show <- head(n=6, gene_expression)
+gene_expression_show
+#Give format to the table
+kable (gene_expression_show, align = 'c', caption = "First 6 genes of gene_expression file")
 ```
 
 #### Inputs:
@@ -130,9 +135,13 @@ gene_expression: This is the data frame that was previously created by reading t
 n=6: This argument specifies the number of rows to be displayed, in this case, the first six rows.
 
 #### Outputs:
-Console Output: The first line head(n=6, gene_expression) will output the first six rows of the gene_expression data frame directly in the R console. This is a simple text-based representation.
+Console Output: The variable gene_expression_show will hold the first six rows of the gene_expression data frame, which will be printed to the console when called.
 
-Data Viewer Window: The second line View(head(n=6, gene_expression)) opens a separate data viewer window in RStudio that displays the first six rows of the gene_expression data frame allowing users to easily scroll and inspect the data.
+Formatted Table: The kable() function formats the gene_expression_show data frame into a neatly structured table with the following attributes:
+
+  -Alignment: Centered columns (align = 'c').
+  -Caption: "First 6 genes of gene_expression file", providing context to the displayed data.
+  
 
 ### Calculate Mean Expression
 
@@ -142,9 +151,10 @@ This code calculates the mean expression level for each gene across all samples 
 # Calculate the mean across the samples and add as a new column
 gene_expression <- gene_expression %>%
   mutate(mean_expression = rowMeans(select(., everything())))
-  
 # Show a table of values for the first six genes including the mean
-head(n=6, gene_expression)
+gene_expression_show <-head(n=6, gene_expression)
+# Give format to a table
+kable (gene_expression_show, align = 'c', caption = "First 6 genes of gene_expression file")
 ```
 
 #### Inputs:
@@ -153,10 +163,16 @@ gene_expression: The data frame containing gene expression data, with rows for g
 select(., everything()): This function selects all columns in the data frame to compute the row means.
 
 #### Outputs:
-gene_expression: The modified data frame now includes a new column mean_expression that contains the mean expression values for each gene.
+Updated gene_expression Data Frame: The original data frame is modified to include a new column named mean_expression, which contains the mean expression value for each gene calculated across all samples.
 
-Console Output: The output of head(n=6, gene_expression) displays the first six rows of the updated gene_expression data frame, showing the new mean_expression column alongside the original data.
+Console Output: The variable gene_expression_show holds the first six rows of the updated gene_expression data frame, which will be printed to the console when called.
 
+Formatted Table: The kable() function creates a neatly formatted table displaying the first six genes along with their mean expression values. This table includes:
+
+  -Alignment: Centered columns (align = 'c').
+  -Caption: "First 6 genes of gene_expression file", providing context to the displayed data.
+  
+  
 ###Identify Top 10 Genes
 
 The top 10 genes can be identified and list using the highest mean expression values from the gene_expression data frame, showed in the following code.
@@ -165,30 +181,33 @@ The top 10 genes can be identified and list using the highest mean expression va
 # List the 10 genes with the highest mean expression
 top_genes <- gene_expression %>%
   arrange(desc(mean_expression)) %>%
-  head(10)
-  
-# Print the top genes
-(top_genes)
+  head (n=10) 
+# Print the top genes in a table
+kable (top_genes, align = 'c', caption = "Top 10 expressed genes")
 ```
 
 #### Inputs:
 gene_expression: The data frame containing gene expression data, including the mean_expression column.
 
 #### Outputs:
-top_genes: A data frame containing the top 10 genes sorted by their mean expression values in descending order.
+Updated top_genes Data Frame: A data frame containing the top ten genes sorted by their mean expression values in descending order.
 
-Console Output: The (top_genes) command displays the details of these top 10 genes in the console.
+Formatted Table: The kable() function generates a neatly formatted table displaying the top ten expressed genes, including:
+
+  -Alignment: Centered columns (align = 'c').
+  -Caption: "Top 10 expressed genes", providing context for the data presented.
+  
 
 ### Count and Plot the Genes with Low Expression (Mean < 10)
 
-The purpose of this code is to identify and list the top 10 genes with the highest mean expression values from the gene_expression data frame.
+This code determines the number of genes with a mean expression value less than 10, prints this count, and creates a histogram to visualize the distribution of these low mean expression values. It also saves the histogram plot to a file for inclusion in a report.
 
 ```r
 # Determine the number of genes with a mean < 10
 num_genes_below_10 <- sum(gene_expression$mean_expression < 10)
 
 # Print the number of genes
-print(num_genes_below_10)
+cat(format(num_genes_below_10), "\n")
 
 # Make a histogram plot of the mean values
 filtered_data <- gene_expression[gene_expression$mean_expression < 10, ]
@@ -205,9 +224,13 @@ ggsave("histogram_mean_low_gene_expression.png")
 gene_expression: The data frame containing gene expression data, including the mean_expression column.
 
 #### Outputs:
-top_genes: A data frame containing the top 10 genes sorted by their mean expression values in descending order.
+num_genes_below_10: An integer value that counts the number of genes with a mean expression less than 10.
 
-Console Output: The print(top_genes) command displays the details of these top 10 genes in the console.
+Console Output: The count of genes below the threshold is printed to the console in a formatted manner.
+
+Histogram Plot: A histogram that visualizes the frequency of mean expression values for genes with mean expression less than 10.
+
+Saved Plot: The histogram plot is saved as a PNG file named "histogram_mean_low_gene_expression.png" in the current working directory.
 
 ## Part 1. Task 2
 
@@ -226,21 +249,27 @@ download.file(URL, destfile = "growth_data.csv")
 # Read the downloaded TSV file into R
 growth_data <- read.csv("growth_data.csv")
 
-head(growth_data)
+#print the table with the 6 first rows
+growth_data_show <- head(growth_data)
+kable (growth_data_show, align = 'c', caption = "First 6 rows of growth_data file")
 
 # Show column names
-cat("The column names are:", colnames(growth_data))
+cat("The column names are:")
+print(colnames(growth_data))
 ```
 
 #### Inputs:
-URL: A string containing the link to the CSV file with tree circumference measurements.
+URL: A string containing the link to the CSV file on GitHub.
 
-growth_data: A data frame containing the imported tree circumference data.
+destfile: A string specifying the name of the file where the downloaded data will be saved locally ("growth_data.csv").
 
 #### Outputs:
-Console Output: The column names of the growth_data data frame are printed to the console.
+growth_data: A data frame containing the growth data read from the CSV file.
 
-View: The growth_data data frame is opened in a viewer for inspection.
+growth_data_show: A table displaying the first six rows of the growth_data data frame, formatted using kable() with a caption "First 6 rows of growth_data file".
+
+Console Output: The message "The column names are:" followed by the names of the columns in the growth_data data frame printed to the console.
+
 
 ### Calculate the Mean and Standard Deviation Statistics
 
@@ -260,16 +289,17 @@ summary_stats <- growth_data %>%
   )
 
 # Print summary statistics
-print(summary_stats)
+cat(paste(capture.output(print(summary_stats)), collapse = "\n"), "\n")
 ```
 
 #### Inputs:
-growth_data: A data frame containing tree circumference measurements for two sites at different time points (2005 and 2020).
+growth_data: A data frame containing tree circumference measurements across different sites and years.
 
 #### Outputs:
 summary_stats: A data frame containing the calculated mean and standard deviation for tree circumference at both sites for the years 2005 and 2020.
 
-Console Output: The summary statistics are printed to the console for review.
+Console Output: The summary statistics printed to the console, formatted as a table.
+
 
 ### Plot the Tree Circumferences Comparisson between 2005 and 2020 
 
@@ -325,7 +355,8 @@ mean_growth <- growth_data %>%
   summarise(mean_growth = mean(Growth_10_years, na.rm = TRUE), .groups = 'drop')
 
 # Print the mean growth
-print(mean_growth)
+cat("Mean growth:")
+print (mean_growth)
 ```
 
 #### Inputs:
@@ -336,7 +367,8 @@ Updated growth_data: The original data frame augmented with a new column, Growth
 
 mean_growth: A data frame summarizing the mean growth for each site.
 
-Console Output: The mean growth values are printed to the console.
+Console Output: A printed statement showing the mean growth for each site, formatted as a table.
+
 
 ### T-Test for Growth Difference
 
@@ -348,7 +380,8 @@ The t-test is a statistical method used to determine if there is a significant d
 t_test_result <- t.test(Growth_10_years ~ Site, data = growth_data)
 
 # Print t-test results
-print(t_test_result)
+cat("t-test results:")
+print (t_test_result)
 ```
 
 #### Inputs:
@@ -358,6 +391,8 @@ growth_data: A data frame containing tree growth data, including the Growth_10_y
 t_test_result: An object containing the results of the t-test, including the t-statistic, degrees of freedom, p-value, and confidence interval.
 
 Console Output: The t-test results are printed to the console, providing insights into whether there is a statistically significant difference in growth between the sites.
+
+
 
 ## Part 2: Examining Biological Sequence Diversity of *Streptacidiphilus jiangxiensis* and comparing it with *Escherichia Coli*
 
@@ -399,6 +434,7 @@ streptacidiphilus_seqs: A list of coding DNA sequences for *Streptacidiphilus ji
 
 Decompressed files: e_coli_cds.fa and streptacidiphilus_cds.fa in the working directory.
 
+
 ### CDS count for both organisms
 
 The purpose of this code is to count the number of coding sequences in the *Escherichia coli* and *Streptacidiphilus jiangxiensis* datasets and create a summary table of these counts.
@@ -413,8 +449,7 @@ coding_counts <- data.frame(
   Organism = c("Escherichia coli", "Streptacidiphilus jiangxiensis"),
   Coding_Sequences = c(ecoli_count, streptacidiphilus_count)
 )
-
-coding_counts
+kable (coding_counts, align = 'c', caption = "Coding Sequences of each organism")
 ```
 
 #### Inputs:
@@ -428,6 +463,9 @@ ecoli_count: The total number of coding sequences in *Escherichia coli*.
 streptacidiphilus_count: The total number of coding sequences in *Streptacidiphilus jiangxiensis*.
 
 coding_counts: A data frame summarizing the counts of coding sequences for both organisms.
+
+Table Output: A formatted table displayed using kable, showing the number of coding sequences for each organism with a caption "Coding Sequences of each organism."
+
 
 ### Total Coding DNA Length of both organisms
 
@@ -443,8 +481,8 @@ total_lengths <- data.frame(
   Organism = c("Escherichia coli", "Streptacidiphilus jiangxiensis"),
   Total_Length = c(sum(ecoli_length), sum(streptacidiphilus_length))
 )
-
-total_lengths
+# Give format
+kable (total_lengths, align = 'c', caption = "Total length of DNA sequences from each organism")
 ```
 
 #### Inputs:
@@ -457,7 +495,10 @@ ecoli_length: A numeric vector containing the lengths of coding sequences for *E
 
 streptacidiphilus_length: A numeric vector containing the lengths of coding sequences for *Streptacidiphilus jiangxiensis*.
 
-total_lengths: A data frame summarizing the total coding DNA lengths for both organisms.
+total_lengths: A data frame summarizing the total lengths of DNA sequences for both organisms, with columns for the organism names and their respective total lengths.
+
+Table Output: A formatted table displayed using kable, showing the total length of DNA sequences for each organism with a caption "Total length of DNA sequences from each organism."
+
 
 ### Coding Sequence Length Distribution
 
@@ -493,7 +534,7 @@ mean_median <- data.frame(
   Median_Length = c(median(ecoli_length), median(streptacidiphilus_length))
 )
 
-mean_median
+kable (mean_median, align = 'c', caption = "Mean and Median of the CDS length each organism")
 ```
 
 #### Inputs:
@@ -504,11 +545,14 @@ streptacidiphilus_length: A numeric vector containing the lengths of coding sequ
 #### Outputs:
 A data frame named mean_median that includes:
 
-Organism: Names of the two organisms.
+  -Organism: Names of the two organisms.
 
-Mean_Length: The mean coding sequence length for each organism.
+  -Mean_Length: The mean coding sequence length for each organism.
 
-Median_Length: The median coding sequence length for each organism.
+  -Median_Length: The median coding sequence length for each organism.
+  
+Table Output: A formatted table displayed using kable, showing the mean and median lengths of coding sequences for each organism with a caption "Mean and Median of the CDS length each organism."
+
 
 ### Frequency of DNA Bases
 
@@ -556,6 +600,7 @@ ecoli_dna_composition: A vector containing the frequency of each nucleotide in *
 streptacidiphilus_dna_composition: A vector containing the frequency of each nucleotide in *Streptacidiphilus jiangxiensis* coding sequences.
 
 Bar Plots: Visual representations of nucleotide frequencies for both organisms, labeled appropriately.
+
 
 ### Amino Acid Frequency
 
@@ -618,6 +663,7 @@ streptacidiphilus_aa_freq: A vector containing the frequency of each amino acid 
 
 Bar Plots: Visual representations of amino acid frequencies for both organisms, labeled appropriately.
 
+
 ### Codon Usage Bias
 
 This code calculates and visualizes the codon usage bias in *Escherichia coli* and *Streptacidiphilus jiangxiensis* by creating relative synonymous codon usage (RSCU) tables and generating bar plots for comparison.
@@ -630,10 +676,10 @@ RSCU_streptacidiphilus <- uco(dna_streptacidiphilus,index="rscu",as.data.frame=T
 # Create a combined table
 RSCU_combined <- cbind(RSCU_ecoli, "S. jiangxiensis RSCU"=RSCU_streptacidiphilus$RSCU)
 colnames(RSCU_combined)[5] <- "E. coli RSCU"
-head(RSCU_combined)
+#Give format to the table
+kable (head(RSCU_combined), align = 'c', caption = "Codon Usage Bias from each from each organism") 
 
-# Bar plots
-
+# Bar plots:
 # E. coli
 
 barplot(height=RSCU_ecoli$RSCU, 
@@ -675,7 +721,10 @@ RSCU_streptacidiphilus: A data frame containing the codon usage data for *Strept
 
 RSCU_combined: A combined table of RSCU values for both organisms.
 
+Formatted Table Output: A table generated using kable, showing the first few rows of the combined RSCU data with the caption "Codon Usage Bias from each organism."
+
 Bar Plots: Visual representations of codon usage bias for both *Escherichia coli* and *Streptacidiphilus jiangxiensis*, labeled appropriately.
+
 
 ### Overlay the two barplots to compare the RSCU between the two organisms.
 
@@ -720,6 +769,7 @@ RSCU_streptacidiphilus: A data frame containing RSCU values for *Streptacidiphil
 Overlaid Bar Plot: A single plot displaying the codon usage for both organisms with transparency to distinguish between the two datasets.
 
 Legend: A legend indicating which color corresponds to each organism.
+
 
 ### K-mer Analysis
 
@@ -791,16 +841,17 @@ ecoli_kmers_filtered <- ecoli_kmers[ecoli_kmers$Frequency > 0, ]
 
 #Selecting the 10 most frequent protein sequence k-mers in E.coli
 ecoli_top_10 <- ecoli_kmers_filtered[order(ecoli_kmers_filtered$Frequency, decreasing = TRUE), ][1:10, ]
-head(ecoli_top_10)
+kable(head(ecoli_top_10), align = 'c', caption = "Top 10 most frequent k-mers in E.coli")
 
 #Selecting the 10 least frequent protein sequence k-mers in E.coli
 ecoli_bottom_10 <- ecoli_kmers_filtered[order(ecoli_kmers_filtered$Frequency), ][1:10, ]
-head(ecoli_bottom_10)
+kable (head(ecoli_bottom_10), align = 'c', caption = "Least 10 frequent k-mers in S.jiangxiensis")
 
 #Selecting and countig E.coli K-mers with 0 frequency
 ecoli_kmers_null <- ecoli_kmers[ecoli_kmers$Frequency == 0, ]
 ecoli_num_kmers_null <- nrow(ecoli_kmers_null)
-cat("Number of E. coli K-mers with 0 frequency:", ecoli_num_kmers_null, "\n")
+cat("Number of E. coli K-mers with 0 frequency:")
+print (ecoli_num_kmers_null)
 
 #S. jiangxiensis
 # Combine k-mer data into one column
@@ -825,17 +876,18 @@ streptacidiphilus_kmers_filtered <- streptacidiphilus_kmers[streptacidiphilus_km
 
 #Selecting the 10 most frequent protein sequence k-mers in S.jiangxiensis
 streptacidiphilus_top_10 <- streptacidiphilus_kmers_filtered[order(streptacidiphilus_kmers_filtered$Frequency, decreasing = TRUE), ][1:10, ]
-head(streptacidiphilus_top_10)
+kable (head(streptacidiphilus_top_10), align = 'c', caption = "Top 10 most frequent k-mers in S.jiangxiensis")
 
 #Selecting the 10 least frequent protein sequence k-mers in S.jiangxiensis
 streptacidiphilus_bottom_10 <- streptacidiphilus_kmers_filtered[order(streptacidiphilus_kmers_filtered$Frequency), ][1:10, ]
-head(streptacidiphilus_bottom_10)
+kable (head(streptacidiphilus_bottom_10), align = 'c', caption = "Least 10 frequent k-mers in S.jiangxiensis")
 
 
 #Selecting and countig S.jiangxiensis K-mers with 0 frequency
 streptacidiphilus_kmers_null <- streptacidiphilus_kmers[streptacidiphilus_kmers$Frequency == 0, ]
 streptacidiphilus_num_kmers_null <- nrow(streptacidiphilus_kmers_null)
-cat("Number of S. jiangxiensis K-mers with 0 frequency:", streptacidiphilus_num_kmers_null, "\n")
+cat("Number of S. jiangxiensis K-mers with 0 frequency:")
+print (streptacidiphilus_num_kmers_null)
 
 
 #Plot of top 10 E.coli K-mers
@@ -893,18 +945,29 @@ grid()
 ```
 
 #### Inputs:
-Protein sequences for both organisms (loaded from previous analyses).
+ecoli_proteins: Protein sequence data for Escherichia coli.
 
-Amino acid alphabets for both organisms.
+streptacidiphilus_proteins: Protein sequence data for Streptacidiphilus jiangxiensis.
+
+aa_ecoli: Alphabet used for Escherichia coli, likely a set of amino acids.
+
+aa_streptacidiphilus: Alphabet used for Streptacidiphilus jiangxiensis.
 
 #### Outputs:
-Data frames containing the frequency of 3-mers, 4-mers, and 5-mers for each organism.
+K-mer Frequency Tables:
+  -ecoli_kmers: A data frame containing k-mers of lengths 3, 4, and 5 for Escherichia coli along with their frequencies.
+  -streptacidiphilus_kmers: A data frame for Streptacidiphilus jiangxiensis containing the same information.
+  
+Formatted Table Outputs:
+  -A table displaying the top 10 most frequent k-mers for both organisms with the caption "Top 10 most frequent k-mers in E. coli" and "Top 10 most frequent k-mers in S. jiangxiensis."
+  -A table for the least frequent k-mers with the respective captions.
 
-Tables of the top 10 and bottom 10 most and least frequent k-mers for each organism.
+Count of K-mers with Zero Frequency:
+  -A printed statement indicating the number of k-mers with a frequency of zero for both organisms.
 
-Counts of k-mers with zero frequency for both organisms.
-
-Bar plots visualizing the top 10 and bottom 10 k-mers for each organism, showing their frequencies.
+Bar Plots:
+  -Bar plots visualizing the top and bottom 10 k-mers for both Escherichia coli and Streptacidiphilus jiangxiensis, showing the frequency of each k-mer.
+  
 
 ### Session Info
 
@@ -929,6 +992,7 @@ Attached Base Packages: A list of base R packages that are loaded by default.
 
 Other Loaded Packages: A list of any additional packages that have been loaded during the session, along with their versions.
 
+
 ## Conclusion
 
 In this assignment, we explored various aspects of gene expression and biological sequence diversity. Initially, we analyzed RNA-seq count data from the file "gene_expression.tsv," calculating the mean expression for each gene and identifying the top 10 genes with the highest mean values, along with determining how many genes had a mean expression below 10. The histogram of mean expression values provided a visual representation of the distribution, highlighting patterns in gene activity across the samples.
@@ -938,6 +1002,7 @@ Next, we examined tree growth data from "growth_data.csv," comparing tree circum
 Part 2 of the assignment focused on comparing the sequence features of *Streptacidiphilus jiangxiensis* to *E. coli*. We downloaded and analyzed coding DNA sequences, tabulating the number of coding sequences and their total length, and identified differences in coding sequence lengths between the organisms. We also calculated the frequency of DNA bases and amino acids, generating bar plots to illustrate these frequencies. Codon usage bias was quantified and compared, providing insights into the evolutionary strategies of the two organisms. Finally, we identified and compared k-mers, revealing significant differences in sequence representation between the two genomes.
 
 Through this comprehensive analysis, we not only gained a deeper understanding of gene expression and tree growth patterns but also explored the genetic diversity and evolutionary implications of coding sequences in two distinct bacterial species. This integrative approach highlighted the importance of bioinformatics in elucidating the complexities of biological systems.
+
 
 ## References:
 
