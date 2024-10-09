@@ -124,9 +124,18 @@ The purpose of this code is to display the first six rows of the gene_expression
 ```r
 # View the first few rows of the data
 gene_expression_show <- head(n=6, gene_expression)
+
+cat("Data 1:GTEX.1117F.0226.SM.5GZZ7")
+cat("Data 2:GTEX.1117F.0426.SM.5EGHI")
+cat("Data 3:GTEX.1117F.0526.SM.5EGHJ")
+
+#Change Gene names in the table
+colnames(gene_expression_show) <- c("Data 1", "Data 2", "Data 3")
+
 #Give format to the table
 kable (gene_expression_show, align = 'c', caption = "First 6 genes of gene_expression file")
 ```
+
 
 #### Inputs:
 gene_expression: This is the data frame that was previously created by reading the gene expression data from a TSV file. It contains gene expression information where rows correspond to genes and columns correspond to different conditions or samples.
@@ -134,13 +143,15 @@ gene_expression: This is the data frame that was previously created by reading t
 n=6: This argument specifies the number of rows to be displayed, in this case, the first six rows.
 
 #### Outputs:
-Console Output: The variable gene_expression_show will hold the first six rows of the gene_expression data frame, which will be printed to the console when called.
+Console Output: It will print the values from three specific columns (identified by their original names) to the console.
 
-Formatted Table: The kable() function formats the gene_expression_show data frame into a neatly structured table with the following attributes:
+
+Formatted Table: A formatted table (using kable) displaying the first six rows of the gene_expression_show data frame with renamed columns ("Data 1", "Data 2", "Data 3").This table includes:
 
   -Alignment: Centered columns (align = 'c').
   -Caption: "First 6 genes of gene_expression file", providing context to the displayed data.
-  
+
+
 
 ### Calculate Mean Expression
 
@@ -152,9 +163,18 @@ gene_expression <- gene_expression %>%
   mutate(mean_expression = rowMeans(select(., everything())))
 # Show a table of values for the first six genes including the mean
 gene_expression_show <-head(n=6, gene_expression)
+
+cat("Data 1:GTEX.1117F.0226.SM.5GZZ7")
+cat("Data 2:GTEX.1117F.0426.SM.5EGHI")
+cat("Data 3:GTEX.1117F.0526.SM.5EGHJ")
+
+#Change Gene names in the table
+colnames(gene_expression_show) <- c("Data 1", "Data 2", "Data 3", "Mean Expression")
+
 # Give format to a table
 kable (gene_expression_show, align = 'c', caption = "First 6 genes of gene_expression file")
 ```
+
 
 #### Inputs:
 gene_expression: The data frame containing gene expression data, with rows for genes and columns for different expression values across samples.
@@ -164,13 +184,17 @@ select(., everything()): This function selects all columns in the data frame to 
 #### Outputs:
 Updated gene_expression Data Frame: The original data frame is modified to include a new column named mean_expression, which contains the mean expression value for each gene calculated across all samples.
 
-Console Output: The variable gene_expression_show holds the first six rows of the updated gene_expression data frame, which will be printed to the console when called.
+Console Output: It prints: 
+  -Data 1:GTEX.1117F.0226.SM.5GZZ7
+  -Data 2:GTEX.1117F.0426.SM.5EGHI
+  -Data 3:GTEX.1117F.0526.SM.5EGHJ
 
-Formatted Table: The kable() function creates a neatly formatted table displaying the first six genes along with their mean expression values. This table includes:
+Formatted Table: A formatted table (using kable) displaying the first six rows of the gene_expression_show data frame with renamed columns ("Data 1", "Data 2", "Data 3"), and which now includes a column for "Mean Expression". This table includes:
 
   -Alignment: Centered columns (align = 'c').
   -Caption: "First 6 genes of gene_expression file", providing context to the displayed data.
-  
+
+
   
 ###Identify Top 10 Genes
 
@@ -181,9 +205,18 @@ The top 10 genes can be identified and list using the highest mean expression va
 top_genes <- gene_expression %>%
   arrange(desc(mean_expression)) %>%
   head (n=10) 
+
+cat("Data 1:GTEX.1117F.0226.SM.5GZZ7")
+cat("Data 2:GTEX.1117F.0426.SM.5EGHI")
+cat("Data 3:GTEX.1117F.0526.SM.5EGHJ")
+
+#Change Gene names in the table
+colnames(top_genes) <- c("Data 1", "Data 2", "Data 3", "Mean Expression")
+
 # Print the top genes in a table
 kable (top_genes, align = 'c', caption = "Top 10 expressed genes")
 ```
+
 
 #### Inputs:
 gene_expression: The data frame containing gene expression data, including the mean_expression column.
@@ -191,10 +224,17 @@ gene_expression: The data frame containing gene expression data, including the m
 #### Outputs:
 Updated top_genes Data Frame: A data frame containing the top ten genes sorted by their mean expression values in descending order.
 
+Console Output: It prints: 
+  -Data 1:GTEX.1117F.0226.SM.5GZZ7
+  -Data 2:GTEX.1117F.0426.SM.5EGHI
+  -Data 3:GTEX.1117F.0526.SM.5EGHJ
+
 Formatted Table: The kable() function generates a neatly formatted table displaying the top ten expressed genes, including:
 
   -Alignment: Centered columns (align = 'c').
   -Caption: "Top 10 expressed genes", providing context for the data presented.
+
+
   
 
 ### Count and Plot the Genes with Low Expression (Mean < 10)

@@ -62,9 +62,19 @@ gene_expression <- read.table("gene_expression.tsv", header = TRUE, sep = "\t", 
 ```{r, echo=FALSE}
 # View the first few rows of the data
 gene_expression_show <- head(n=6, gene_expression)
+
+cat("Data 1:GTEX.1117F.0226.SM.5GZZ7")
+cat("Data 2:GTEX.1117F.0426.SM.5EGHI")
+cat("Data 3:GTEX.1117F.0526.SM.5EGHJ")
+
+#Change Gene names in the table
+colnames(gene_expression_show) <- c("Data 1", "Data 2", "Data 3")
+
 #Give format to the table
 kable (gene_expression_show, align = 'c', caption = "First 6 genes of gene_expression file")
 ```
+
+
 
 ### 1.2 Make a new column which is the mean of the other columns. Show a table of values for the first six genes.
 
@@ -72,15 +82,26 @@ kable (gene_expression_show, align = 'c', caption = "First 6 genes of gene_expre
 
 Calculate Mean Expression
 
+
 ```{r, echo=FALSE}
 # Calculate the mean across the samples and add as a new column
 gene_expression <- gene_expression %>%
   mutate(mean_expression = rowMeans(select(., everything())))
 # Show a table of values for the first six genes including the mean
 gene_expression_show <-head(n=6, gene_expression)
+
+cat("Data 1:GTEX.1117F.0226.SM.5GZZ7")
+cat("Data 2:GTEX.1117F.0426.SM.5EGHI")
+cat("Data 3:GTEX.1117F.0526.SM.5EGHJ")
+
+#Change Gene names in the table
+colnames(gene_expression_show) <- c("Data 1", "Data 2", "Data 3", "Mean Expression")
+
 # Give format to a table
 kable (gene_expression_show, align = 'c', caption = "First 6 genes of gene_expression file")
 ```
+
+
 
 ### 1.3 List the 10 genes with the highest mean expression.
 
@@ -93,9 +114,19 @@ Identify Top 10 Genes
 top_genes <- gene_expression %>%
   arrange(desc(mean_expression)) %>%
   head (n=10) 
+
+cat("Data 1:GTEX.1117F.0226.SM.5GZZ7")
+cat("Data 2:GTEX.1117F.0426.SM.5EGHI")
+cat("Data 3:GTEX.1117F.0526.SM.5EGHJ")
+
+#Change Gene names in the table
+colnames(top_genes) <- c("Data 1", "Data 2", "Data 3", "Mean Expression")
+
 # Print the top genes in a table
 kable (top_genes, align = 'c', caption = "Top 10 expressed genes")
 ```
+
+
 
 ### 1.4 Determine the number of genes with a mean <10.
 
